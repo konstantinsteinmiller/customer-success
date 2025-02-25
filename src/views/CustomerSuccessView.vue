@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { useAuth } from 'vue-auth3'
 
 const { t } = useI18n()
+const router = useRouter()
+const auth = useAuth()
+
+const logout = async () => {
+  await auth.logout({ url: '/auth/logout' })
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -14,22 +23,24 @@ const { t } = useI18n()
       </v-btn>
     </v-toolbar>
     <v-card>
-      <v-card-title>{{ t('hello') }} </v-card-title>
+      <v-card-title>{{ t('welcome') }}</v-card-title>
       <v-card-text>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus animi asperiores autem commodi consectetur
-        cum facere id, iure, nesciunt nobis pariatur quasi sequi, voluptatem! Accusamus, dolores quis. Eum, omnis,
-        voluptatem?
+        <v-btn
+          @click="logout"
+          append-icon="mdi-logout"
+          >Logout
+        </v-btn>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          theme="dark"
-          color="primary"
-        >
-          {{ t('yesRemove') }}
-        </v-btn>
-        <v-btn variant="text">
-          {{ t('cancel') }}
-        </v-btn>
+        <!--        <v-btn-->
+        <!--          theme="dark"-->
+        <!--          color="primary"-->
+        <!--        >-->
+        <!--          {{ t('yesRemove') }}-->
+        <!--        </v-btn>-->
+        <!--        <v-btn variant="text">-->
+        <!--          {{ t('cancel') }}-->
+        <!--        </v-btn>-->
       </v-card-actions>
     </v-card>
   </v-container>
@@ -39,6 +50,7 @@ const { t } = useI18n()
 
 <i18n>
 en:
+  welcome: Welcome! You are logged in
   yesRemove: Yes Remove
   cancel: Cancel
 de:

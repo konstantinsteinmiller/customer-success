@@ -12,9 +12,15 @@
     }
   ],
   "compilerOptions": {
-    "module": "NodeNext"
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": [
-    "eslint.config.*"
+    "eslint.config.*", "server/**/*.ts"
   ]
 }

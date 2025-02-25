@@ -1,23 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CustomerSuccessView from '@/views/CustomerSuccessView.vue'
 
+export const routes = [
+  {
+    path: '/',
+    name: 'home',
+    redirect: 'login',
+    meta: {},
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/LoginView.vue'),
+  },
+  {
+    path: '/customer-success',
+    name: 'customer-success',
+    component: () => import('@/views/CustomerSuccessView.vue'),
+    meta: {
+      auth: true,
+    },
+  },
+]
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: CustomerSuccessView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
-    },
-  ],
+  history: createWebHistory('/#/'),
+  routes,
+})
+
+// Simple navigation guard – if no token is found, redirect to login
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !localStorage.getItem('access_token')) {
+    next({ name: 'Login' })
+  } else {
+    next()
+  }
 })
 
 export default router
