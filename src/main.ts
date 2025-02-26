@@ -8,7 +8,7 @@ import App from '@/App.vue'
 import router from '@/router'
 import { setupVuetify } from '@/utils/setupVuetify'
 import { i18n } from '@/utils/setupI18n'
-import { auth } from '@/api/auth'
+import { useAuth } from '@/use/auth.ts'
 import { configureAxios } from '@/api/config.ts'
 
 configureAxios()
@@ -18,8 +18,10 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use(auth)
 app.use(i18n)
 app.use(vuetify)
+
+const auth = useAuth()
+auth.loadAccessToken()
 
 app.mount('#app')

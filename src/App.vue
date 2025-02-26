@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import { auth } from '@/api/auth.ts'
+import { RouterView, useRouter } from 'vue-router'
+import { useAuth } from '@/use/auth.ts'
 
-const logout = () => {
-  auth
-    .logout({
-      url: '',
-      makeRequest: true,
-      redirect: { name: 'login' },
-    })
-    .then(() => {
-      console.log('logged out')
-    })
+const auth = useAuth()
+const router = useRouter()
+
+const logout = async () => {
+  const success: boolean = await auth.logout()
+  if (success) {
+    router.push({ name: 'login' })
+  }
 }
 </script>
 
@@ -21,7 +19,7 @@ const logout = () => {
       <v-row>
         <img
           class="min-w-16 w-32"
-          src="/joineer.png"
+          src="/images/joineer.png"
           alt="joineer-log"
         />
         <v-spacer />

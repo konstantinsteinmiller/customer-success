@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '@/use/auth.ts'
+
+const auth = useAuth()
 
 export const routes = [
   {
@@ -11,6 +14,11 @@ export const routes = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/LoginView.vue'),
+  },
+  {
+    path: '/forbidden',
+    name: 'forbidden',
+    component: () => import('@/views/ForbiddenView.vue'),
   },
   {
     path: '/customer-success',
@@ -27,9 +35,19 @@ const router = createRouter({
 })
 
 // Simple navigation guard – if no token is found, redirect to login
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('access_token')) {
-    next({ name: 'Login' })
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.auth) {
+    let isTokenValid = auth.getAccessToken() === null
+    if (isTokenValid) {
+      next({ name: 'login' })
+    }
+
+    isTokenValid = await auth.isAuthenticated()
+    if (isTokenValid) {
+      next()
+    } else {
+      next({ name: 'login' })
+    }
   } else {
     next()
   }
