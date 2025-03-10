@@ -6,4 +6,5 @@ const auth = useAuth()
 export const configureAxios = () => {
   axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL + '/api'
   axios.defaults.headers.Authorization = auth.getAccessToken() || ''
+  axios.defaults.withCredentials = true
 }
