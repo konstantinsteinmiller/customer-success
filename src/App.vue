@@ -23,11 +23,23 @@ const logout = async () => {
           alt="joineer-log"
         />
         <v-spacer />
-        <v-btn
-          @click="logout"
-          append-icon="mdi-logout"
-          >Logout</v-btn
-        >
+        <v-row class="flex gap-4 justify-end">
+          <v-btn
+            @click="() => router.push({ name: 'login' })"
+            append-icon="mdi-logout"
+            >To Login</v-btn
+          >
+          <v-btn
+            @click="() => router.push({ name: 'customer-success' })"
+            append-icon="mdi-logout"
+            >To Customer Success</v-btn
+          >
+          <v-btn
+            @click="logout"
+            append-icon="mdi-logout"
+            >Logout</v-btn
+          >
+        </v-row>
       </v-row>
     </v-container>
   </header>

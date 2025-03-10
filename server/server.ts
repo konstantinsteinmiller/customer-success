@@ -6,7 +6,6 @@ import { config } from 'dotenv'
 import passport from 'passport'
 import session from 'express-session'
 import GoogleStrategy from 'passport-google-oauth20'
-import qs from 'querystring'
 import axios from 'axios'
 
 const env = config()?.parsed

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const verifyToken = async () => {
   try {
-    const response = await axios.post('/token/verify')
+    const response = await axios.post('/auth/token/verify')
 
     return response.data
   } catch (error) {
@@ -12,7 +12,7 @@ export const verifyToken = async () => {
 
 export const logoutUser = async () => {
   try {
-    const response = await axios.post('/user/logout')
+    const response = await axios.post('/auth/logout')
 
     return response.data
   } catch (error) {
