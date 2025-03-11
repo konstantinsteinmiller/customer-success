@@ -15,13 +15,17 @@ export default defineConfig({
     tailwindcss(),
     VueI18nPlugin({
       runtimeOnly: false,
+      compositionOnly: true,
       include: path.resolve(__dirname, './src/i18n/**'),
       defaultSFCLang: 'yaml',
     }),
   ],
+  build: {
+    outDir: 'dist',
+  },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   optimizeDeps: {

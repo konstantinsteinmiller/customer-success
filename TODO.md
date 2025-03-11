@@ -1,0 +1,4 @@
+- Piwik api visitor daten holen
+- chart library aussuchen
+- api call auf Java backend
+- deploy to digital ocean

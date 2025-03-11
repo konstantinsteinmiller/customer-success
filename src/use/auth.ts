@@ -24,15 +24,16 @@ export const useAuth = () => {
 
   const isAuthenticated = async () => {
     try {
-      const { isValid } = await verifyToken()
+      const { isValid }: VerifyTokenResult = await verifyToken()
       return isValid
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error('error: ', error)
       return false
     }
   }
 
   const logout = async () => {
-    const result = await logoutUser(accessToken as string)
+    const result: LogoutResult = await logoutUser()
     if (result.success) {
       accessToken = null
     }

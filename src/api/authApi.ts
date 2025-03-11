@@ -5,8 +5,9 @@ export const verifyToken = async () => {
     const response = await axios.post('/auth/token/verify')
 
     return response.data
-  } catch (error) {
-    return error.response.data
+  } catch (error: unknown) {
+    console.error('error: ', error)
+    return false
   }
 }
 
@@ -15,17 +16,17 @@ export const logoutUser = async () => {
     const response = await axios.post('/auth/logout')
 
     return response.data
-  } catch (error) {
-    console.error('error.response.data: ', error.response.data)
+  } catch (error: unknown) {
+    console.error('error: ', error)
     return false
   }
 }
 
 export const fetchGoogleAccessToken = async (code: string) => {
   try {
-    const response = await axios.post('http://localhost:3005/api/auth', { code })
+    const response = await axios.post('/auth', { code })
     return response.data
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Failed to send authorization code:', error)
     return null
   }
