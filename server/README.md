@@ -1,14 +1,16 @@
+Node.js server for authentication and data aggregation from piwik api and other sources.
+
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm run serve
 
 # Build the project
-npm run build
+pnpm run build
 
 # Run the production server
-npm start
+pnpm start
 
 # Run tests
 npm test

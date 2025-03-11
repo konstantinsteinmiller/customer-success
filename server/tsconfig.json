@@ -1,13 +1,29 @@
 {
+  "include": ["src/**/*"],  // Include all source files under src folder
+  "exclude": ["node_modules", "dist"],  // Exclude node_modules and dist folders
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig to read more about this file */
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "baseUrl": "./src",  // Important: Define the base URL for resolving paths
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "allowJs": true,
     "resolveJsonModule": true,
-    "module": "NodeNext",  // 👈 Ensures ES Module support
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",  // 👈 Ensures ES Module support
+    "moduleResolution": "node",
     "target": "ESNext",
+    "noImplicitAny": false,
+    "declaration": true,  // Generate .d.ts files (optional)
+    "sourceMap": true,  // Enable source maps for debugging
+    "isolatedModules": true,  // Enable source maps for debugging
+    "removeComments": true, // Remove comments from output
+    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+    "strict": true,
+    "rewriteRelativeImportExtensions": true,
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
 
     /* Projects */
     // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
@@ -86,10 +102,8 @@
     // "erasableSyntaxOnly": true,                       /* Do not allow runtime constructs that are not part of ECMAScript. */
     // "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
     // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
-    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
 
-    /* Type Checking */
-    "strict": true,                                      /* Enable all strict type-checking options. */
+    /* Type Checking */                                /* Enable all strict type-checking options. */
     // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
     // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
     // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
@@ -112,6 +126,5 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   }
 }

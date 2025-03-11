@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { getDashboard } from '../controllers/dashboard.controller'
-import authMiddleware from '../middlewares/auth.middleware'
+import { getDashboard } from '@/controllers/dashboard.controller'
+import authMiddleware from '@/middlewares/auth.middleware'
 
-const router = Router()
+const router: any = Router()
 
 router.post('/dashboard', authMiddleware, getDashboard)
 

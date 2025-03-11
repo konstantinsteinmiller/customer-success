@@ -3,16 +3,12 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
-const corsOptions = {
-  origin: `http://localhost:${PORT}`,
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
 
 export const config = {
   PORT,
-  MONGO_URI: process.env.MONGO_URI,
+  MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost:27017/exampleDB',
   NODE_ENV: process.env.NODE_ENV || 'development',
-  corsOptions,
+  isProductionEnv: process.env.NODE_ENV === 'production',
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   GOOGLE_TOKEN_URL: 'https://oauth2.googleapis.com/token',

@@ -1,10 +1,11 @@
 // Middleware to protect routes
 import jwt from 'jsonwebtoken'
-import { config } from '../config/env'
-import { logger } from '../utils/logger.js'
+import { config } from '@/config/env'
+import { logger } from '@/utils/logger'
 
 const authMiddleware = (req: any, res: any, next: any) => {
   const token = req.cookies.token
+  logger.info(`cookie ${token}`)
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' })
   }

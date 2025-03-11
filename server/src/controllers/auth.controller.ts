@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import { logger } from '../utils/logger'
-import { config } from '../config/env'
+import { logger } from '@/utils/logger'
+import { config } from '@/config/env'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
 
 let accessToken: string | null = null
 
-export const authenticateGoogle = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticateGoogle = async (req: Request, res: Response) => {
   try {
     const code = req.body.code // Use req.body instead of headers.authorization
     if (!code) {
@@ -37,12 +37,14 @@ export const authenticateGoogle = async (req: Request, res: Response, next: Next
     accessToken = response.data.access_token
 
     const token = jwt.sign(userDetails, config.JWT_SECRET!, { expiresIn: '1h' })
+    logger.info(`JWT token: ${token}`)
     // Send token as a secure cookie
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: config.isProductionEnv,
       maxAge: 3600000, // 1 hour
-      sameSite: 'strict',
+      sameSite: config.isProductionEnv ? 'none' : 'strict',
+      path: '/api'
     })
 
     res.status(200).json({
@@ -53,7 +55,6 @@ export const authenticateGoogle = async (req: Request, res: Response, next: Next
     })
   } catch (error: any) {
     logger.error('Error exchanging authorization code:', error.response?.data || error.message)
-    console.error('Error exchanging authorization code:', error.response?.data || error.message)
     res.status(400).json({ message: 'Failed to exchange authorization code', error: error.response?.data })
   }
 }
@@ -61,7 +62,13 @@ export const authenticateGoogle = async (req: Request, res: Response, next: Next
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     accessToken = null
-    res.clearCookie('token')
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: config.isProductionEnv,
+      maxAge: 3600000, // 1 hour
+      sameSite: config.isProductionEnv ? 'none' : 'strict',
+      path: '/api'
+    })
     res.status(200).json({ message: 'User logged out', success: true })
   } catch (error) {
     logger.error(error)

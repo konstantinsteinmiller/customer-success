@@ -1,8 +1,8 @@
 import request from 'supertest'
 import mongoose from 'mongoose'
-import app from '../app' // Import your Express app
-import { UserModel as User } from '../models/user.model' // Import the User model
-import { connectDB, disconnectDB } from '../config/db' // Import database connection
+import app from '@/app' // Import your Express app
+import { UserModel as User } from '@/models/user.model' // Import the User model
+import { connectDB, disconnectDB } from '@/config/db' // Import database connection
 
 // Mock user data
 const testUser = {

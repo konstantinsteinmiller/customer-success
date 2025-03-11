@@ -4,13 +4,13 @@ import helmet from 'helmet'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
-import { errorHandler } from './middlewares/error.middleware'
-import authRoutes from './routes/auth.routes'
-import userRoutes from './routes/user.routes'
-import dashboardRoutes from './routes/dashboard.routes'
-import { config } from './config/env'
+import { errorHandler } from '@/middlewares/error.middleware'
+import authRoutes from '@/routes/auth.routes'
+import userRoutes from '@/routes/user.routes'
+import dashboardRoutes from '@/routes/dashboard.routes'
+import { config } from '@/config/env'
 
-const app = express()
+const app: any = express()
 
 // Middleware
 app.use(express.json())

@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json", // Extend the base configuration
+  "compilerOptions": {
+    "module": "ESNext", // Ensure ESM output
+    "moduleResolution": "node", // Use Node.js module resolution
+    "outDir": "./dist", // Output directory for transpiled files
+    "rootDir": "./src", // Root directory for source files
+    "declaration": true, // Generate .d.ts files
+    "sourceMap": true, // Generate source maps for debugging
+    "esModuleInterop": true, // Enable ESM interop
+    "allowSyntheticDefaultImports": true, // Allow synthetic default imports
+    "resolveJsonModule": true, // Allow importing JSON files
+    "strict": true, // Enable strict type-checking
+    "skipLibCheck": true, // Skip type-checking of .d.ts files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in imports
+    "isolatedModules": true, // Ensure each file can be transpiled independently
+    "removeComments": true, // Remove comments from the output
+    "rewriteRelativeImportExtensions": true, // Rewrite import extensions to .js
+    "types": ["node"] // Add this line
+  },
+  "include": ["src/**/*"], // Include all files in the src directory
+  "exclude": ["node_modules", "dist", "**/*.test.ts"] // Exclude unnecessary files
+}

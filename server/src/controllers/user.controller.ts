@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { UserService } from '../services/user.service'
-import { logger } from '../utils/logger'
+import { UserService } from '@/services/user.service'
+import { logger } from '@/utils/logger'
 
 const userService = new UserService()
 
