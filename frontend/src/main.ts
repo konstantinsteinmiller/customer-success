@@ -6,8 +6,8 @@ import { createPinia } from 'pinia'
 
 import App from '@/App.vue'
 import router from '@/router'
-import { setupVuetify } from '@/utils/setupVuetify'
-import { i18n } from '@/utils/setupI18n'
+import { setupVuetify } from '@/utils/setupVuetify.ts'
+import { i18n } from '@/utils/setupI18n.ts'
 import { useAuth } from '@/use/auth.ts'
 import { configureAxios } from '@/api/config.ts'
 

@@ -1,4 +1,4 @@
-import { fetchGoogleAccessToken, logoutUser, verifyToken } from '@/api/authApi'
+import { fetchGoogleAccessToken, logoutUser, verifyToken } from '@/api/authApi.ts'
 import axios from 'axios'
 import { googleSdkLoaded } from 'vue3-google-login'
 import { useAuthStore } from '@/stores/authStore.ts'

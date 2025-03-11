@@ -1,0 +1,18 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "frontend/src/**/*",
+    "frontend/src/**/*.vue", "eslint.config.*"],
+  "exclude": [
+    "frontend/src/**/__tests__/*"
+  ],
+  "compilerOptions": {
+    "tsBuildInfoFile": "tsconfig.app.tsbuildinfo",
+    "composite": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
