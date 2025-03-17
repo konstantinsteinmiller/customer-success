@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useAuth } from '@/use/auth.ts'
+import { useAuth } from '@/use/auth'
 
 const auth = useAuth()
 

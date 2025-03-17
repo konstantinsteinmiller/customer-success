@@ -9,6 +9,7 @@ import authRoutes from '@/routes/auth.routes'
 import userRoutes from '@/routes/user.routes'
 import dashboardRoutes from '@/routes/dashboard.routes'
 import { config } from '@/config/env'
+import analyticsRoutes from '@/routes/analytics.routes'
 
 const app: any = express()
 
@@ -21,7 +22,7 @@ app.use(
   cors({
     origin: config.FE_BASE_URL,
     credentials: true,
-  }),
+  })
 )
 app.use(helmet())
 app.use(compression())
@@ -30,6 +31,7 @@ app.use(compression())
 app.use('/api', userRoutes)
 app.use('/api', authRoutes)
 app.use('/api', dashboardRoutes)
+app.use('/api', analyticsRoutes)
 
 // Error Handling Middleware
 app.use(errorHandler)

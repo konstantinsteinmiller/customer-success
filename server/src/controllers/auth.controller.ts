@@ -44,7 +44,7 @@ export const authenticateGoogle = async (req: Request, res: Response) => {
       secure: config.isProductionEnv,
       maxAge: 3600000, // 1 hour
       sameSite: config.isProductionEnv ? 'none' : 'strict',
-      path: '/api'
+      path: '/api',
     })
 
     res.status(200).json({
@@ -67,7 +67,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
       secure: config.isProductionEnv,
       maxAge: 3600000, // 1 hour
       sameSite: config.isProductionEnv ? 'none' : 'strict',
-      path: '/api'
+      path: '/api',
     })
     res.status(200).json({ message: 'User logged out', success: true })
   } catch (error) {

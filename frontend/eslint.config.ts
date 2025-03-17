@@ -72,6 +72,8 @@ export default defineConfigWithVueTs(
           multiline: 1,
         },
       ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-implicit-any': 'off',
       'no-else-return': ['error', { allowElseIf: false }],
       curly: 'error',
       'prettier/prettier': [

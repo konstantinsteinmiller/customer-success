@@ -1,4 +1,3 @@
-// Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
@@ -7,6 +6,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 import { md } from 'vuetify/iconsets/md'
 import colors from 'vuetify/util/colors'
+import vuetifyMessages from '@/i18n/vuetify'
 
 export const setupVuetify = () => {
   return createVuetify({
@@ -31,9 +31,6 @@ export const setupVuetify = () => {
         color: 'primary',
       },
     },
-    // locale: {
-    //   adapter: createVueI18nAdapter({ i18n, useI18n }),
-    // },
     icons: {
       defaultSet: 'mdi',
       aliases,
@@ -48,7 +45,7 @@ export const setupVuetify = () => {
         light: {
           colors: {
             primary: colors.blue.base, // blue
-            //'lighten-6': '#e6f4ff', // light blue
+            'lighten-6': '#e6f4ff', // light blue
             accentblue: '#d6efff',
             joineer: '#9c2d56', // joineer red
             secondary: '#757575',
@@ -60,6 +57,10 @@ export const setupVuetify = () => {
           },
         },
       },
+    },
+    locale: {
+      locale: 'en', // Default locale
+      messages: vuetifyMessages, // Custom translations
     },
   })
 }

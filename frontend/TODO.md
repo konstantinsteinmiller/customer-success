@@ -1,4 +1,4 @@
-- Piwik api visitor daten holen
-- chart library aussuchen
-- api call auf Java backend
-- deploy to digital ocean
+- [x] Piwik api visitor daten holen, month selector
+- [x] chart library aussuchen
+- [ ] api call auf Java backend
+- [x] deploy to digital ocean
