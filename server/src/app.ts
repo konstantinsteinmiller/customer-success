@@ -5,11 +5,8 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import { errorHandler } from '@/middlewares/error.middleware'
-import authRoutes from '@/routes/auth.routes'
-import userRoutes from '@/routes/user.routes'
-import dashboardRoutes from '@/routes/dashboard.routes'
 import { config } from '@/config/env'
-import analyticsRoutes from '@/routes/analytics.routes'
+import registerRoutes from '@/routes'
 
 const app: any = express()
 
@@ -28,10 +25,7 @@ app.use(helmet())
 app.use(compression())
 
 // Routes
-app.use('/api', userRoutes)
-app.use('/api', authRoutes)
-app.use('/api', dashboardRoutes)
-app.use('/api', analyticsRoutes)
+registerRoutes(app)
 
 // Error Handling Middleware
 app.use(errorHandler)

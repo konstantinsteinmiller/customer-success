@@ -6,19 +6,34 @@ import LineChart from '@/components/LineChart.vue'
 import { CHART_COLORS } from '@/config/constants'
 import DateSelector from '@/components/DateSelector.vue'
 import { DateRange } from '@/types/api'
+import { transformSurveyData } from '@/utils/transformData'
+import ProcessDataDashboard from '@/components/ProcessDataDashboard.vue'
 
 const { t } = useI18n()
-const { getVisitorData } = useAnalytics()
+const { getVisitorData, getProcessData } = useAnalytics()
+
+const isLoading = ref(false)
+
 const visitorsDataList: Ref<number[]> | Ref<Promise<number[]>> = ref([])
 const labelsList: Ref<string[]> = ref([])
 
-const onDateChange = (range: DateRange) => {
-  fetchData(range)
-}
+const surveysList: Ref<number[]> | Ref<Promise<number[]>> = ref([])
+
+const onDateChange = (range: DateRange) => fetchData(range)
 const fetchData = async (range: DateRange) => {
-  const result = await getVisitorData(range)
-  labelsList.value = [...Array(result.length).keys()].map(day => day + 1 + '')
-  visitorsDataList.value = result
+  isLoading.value = true
+  try {
+    const [visitorsResult, processResult] = await Promise.all([getVisitorData(range), getProcessData('companyId')])
+
+    isLoading.value = false
+    labelsList.value = [...Array(visitorsResult.length).keys()].map(day => day + 1 + '')
+    visitorsDataList.value = visitorsResult
+
+    surveysList.value = processResult
+    console.log('surveysList.value: ', surveysList.value)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const totalVisitors = computed(() => {
@@ -35,7 +50,27 @@ const totalVisitors = computed(() => {
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </v-toolbar>
-    <v-card>
+
+    <ProcessDataDashboard
+      :data="surveysList"
+      :isLoading="isLoading"
+    />
+
+    <v-card
+      class="visitor-card"
+      :class="{ 'v-card__loader--hidden': !isLoading }"
+      :disabled="isLoading"
+      :loading="isLoading"
+    >
+      <template #loader="{ isActive }">
+        <v-progress-circular
+          v-if="isActive"
+          :active="isActive"
+          :size="70"
+          color="amber"
+          indeterminate
+        />
+      </template>
       <v-card-title></v-card-title>
       <v-card-text>
         <v-row class="items-center">
@@ -68,10 +103,34 @@ const totalVisitors = computed(() => {
         </v-btn>
       </v-card-actions>-->
     </v-card>
+
+    <!--    <v-card>
+      <div class="px-4 mb-2">
+        <v-chip-group selected-class="bg-deep-purple-lighten-2">
+          <v-chip>5:30PM</v-chip>
+
+          <v-chip>7:30PM</v-chip>
+
+          <v-chip>8:00PM</v-chip>
+
+          <v-chip>9:00PM</v-chip>
+        </v-chip-group>
+      </div>
+    </v-card>-->
   </v-container>
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+:deep(.v-card__loader)
+  display: flex
+  justify-content: center
+  align-items: center
+  height: 100%
+
+.v-card
+  &.v-card__loader--hidden :deep(.v-card__loader)
+    display: none
+</style>
 
 <i18n>
 en:

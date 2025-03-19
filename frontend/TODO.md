@@ -1,4 +1,8 @@
 - [x] Piwik api visitor daten holen, month selector
 - [x] chart library aussuchen
-- [ ] api call auf Java backend
 - [x] deploy to digital ocean
+- [x] mock GET info/processData/{companyId}
+- [ ] Thomas macht einen company abhängigen info/processData endpoint
+- [ ] Thomas macht companyIds endpoint
+- [ ] Merit braucht nur die Summe über alle Surveys für die company UND aggregiert über alle Companies,
+  - das ganze für 10-12 properties

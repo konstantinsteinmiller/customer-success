@@ -17,3 +17,8 @@ export interface DateRange {
   start: string
   end: string
 }
+
+export interface ProcessResult {
+  message: string
+  data: any[]
+}

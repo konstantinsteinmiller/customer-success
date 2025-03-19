@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { getVisitorData } from '@/controllers/analytics.controller'
 import authMiddleware from '@/middlewares/auth.middleware'
+import { getProcessData } from '@/controllers/processData.controller'
 
 const router: any = Router()
 
-router.get('/analytics/visitor-data', authMiddleware, getVisitorData)
+router.get('/process-data', authMiddleware, getProcessData)
 
 export default router

@@ -17,4 +17,5 @@ export const config = {
   FE_BASE_URL: process.env.FE_BASE_URL,
   PIWIK_CLIENT_ID: process.env.PIWIK_CLIENT_ID,
   PIWIK_SECRET: process.env.PIWIK_SECRET,
+  BACKEND_URL: process.env.BACKEND_URL,
 }

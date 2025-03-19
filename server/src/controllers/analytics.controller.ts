@@ -67,9 +67,10 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
     })
     logger.info(queryResult.data.data)
 
-    res
-      .status(200)
-      .json({ message: 'Here is the Dashboard you asked for', data: queryResult.data.data.map(entry => entry[1]) })
+    res.status(200).json({
+      message: 'Here is the monthly visiting user data you asked for',
+      data: queryResult.data.data.map(entry => entry[1]),
+    })
   } catch (error) {
     logger.error(error)
     next(error)
