@@ -12,8 +12,12 @@ export const transformSurveyData = (dataList: SurveyMetrics[]): Partial<SurveyMe
     })
 
     /* average them out */
-    if (index === totalEntries - 1) {
+    if (index === totalEntries - 1 && totalEntries > 0) {
       Object.keys(acc).forEach(key => {
+        if (key === 'totalFeedForwards') {
+          acc['avgFeedForwardsPerSurvey'] = +(acc[key] / totalEntries).toFixed(2)
+          acc['totalFeedForwards'] = +acc[key].toFixed(2)
+        }
         acc[key] = +(acc[key] / totalEntries).toFixed(2)
       })
     }

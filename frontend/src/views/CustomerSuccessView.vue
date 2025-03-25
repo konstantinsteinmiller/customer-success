@@ -6,7 +6,7 @@ import LineChart from '@/components/LineChart.vue'
 import { CHART_COLORS } from '@/config/constants'
 import DateSelector from '@/components/DateSelector.vue'
 import { DateRange } from '@/types/api'
-import { transformSurveyData } from '@/utils/transformData'
+import { CompanyToSurveyMap } from '@/../../server/src/types/api'
 import ProcessDataDashboard from '@/components/ProcessDataDashboard.vue'
 
 const { t } = useI18n()
@@ -17,20 +17,20 @@ const isLoading = ref(false)
 const visitorsDataList: Ref<number[]> | Ref<Promise<number[]>> = ref([])
 const labelsList: Ref<string[]> = ref([])
 
-const surveysList: Ref<number[]> | Ref<Promise<number[]>> = ref([])
+const companiesToSurveyMap: Ref<CompanyToSurveyMap> | Ref<Promise<CompanyToSurveyMap>> = ref([])
 
 const onDateChange = (range: DateRange) => fetchData(range)
 const fetchData = async (range: DateRange) => {
   isLoading.value = true
   try {
-    const [visitorsResult, processResult] = await Promise.all([getVisitorData(range), getProcessData('companyId')])
+    const [visitorsResult, processResult] = await Promise.all([getVisitorData(range), getProcessData()])
 
     isLoading.value = false
     labelsList.value = [...Array(visitorsResult.length).keys()].map(day => day + 1 + '')
     visitorsDataList.value = visitorsResult
 
-    surveysList.value = processResult
-    console.log('surveysList.value: ', surveysList.value)
+    companiesToSurveyMap.value = processResult
+    // console.log('companiesToSurveyMap: ', companiesToSurveyMap.value)
   } finally {
     isLoading.value = false
   }
@@ -43,16 +43,8 @@ const totalVisitors = computed(() => {
 
 <template>
   <v-container>
-    <v-toolbar>
-      <v-toolbar-title class="text-3xl text-red-400 font-bold">Customer Success</v-toolbar-title>
-      <v-spacer />
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-toolbar>
-
     <ProcessDataDashboard
-      :data="surveysList"
+      :data="companiesToSurveyMap"
       :isLoading="isLoading"
     />
 

@@ -30,7 +30,21 @@ export interface SurveyMetrics {
 }
 
 export interface ProcessDataResult {
-  data: {
-    data: SurveyMetrics[]
+  data: SurveyMetrics[]
+}
+
+export interface Company {
+  id: string
+  name: string
+}
+
+export interface CompaniesListResult {
+  data: Company[]
+}
+
+export interface CompanyToSurveyMap {
+  [key: string]: {
+    name: string
+    surveysList: SurveyMetrics[]
   }
 }

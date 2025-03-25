@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import authMiddleware from '@/middlewares/auth.middleware'
-import { getProcessData } from '@/controllers/processData.controller'
+import { getProcessData } from '@/controllers/process-data.controller'
 
 const router: any = Router()
 

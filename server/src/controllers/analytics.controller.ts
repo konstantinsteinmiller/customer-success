@@ -65,7 +65,7 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
       filters: null,
       metric_filters: null,
     })
-    logger.info(queryResult.data.data)
+    // logger.info(queryResult.data.data)
 
     res.status(200).json({
       message: 'Here is the monthly visiting user data you asked for',

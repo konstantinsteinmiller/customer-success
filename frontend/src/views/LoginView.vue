@@ -19,7 +19,12 @@ watch(
   () => authStore.isAuthenticated,
   isAuthenticated => {
     if (isAuthenticated) {
-      router.push({ path: '/customer-success' })
+      router.push({
+        name: 'customer-success',
+        query: {
+          companyId: '34805saw645338159',
+        },
+      })
     }
   }
 )

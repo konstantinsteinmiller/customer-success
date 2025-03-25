@@ -16,7 +16,7 @@ const logout = async () => {
 <template>
   <header>
     <v-container>
-      <v-row>
+      <v-row class="items-center">
         <img
           class="min-w-16 w-32"
           src="/images/joineer.png"
@@ -30,7 +30,15 @@ const logout = async () => {
             >To Login</v-btn
           >
           <v-btn
-            @click="() => router.push({ name: 'customer-success' })"
+            @click="
+              () =>
+                router.push({
+                  name: 'customer-success',
+                  query: {
+                    companyId: '34805saw645338159',
+                  },
+                })
+            "
             append-icon="mdi-logout"
             >To Customer Success</v-btn
           >

@@ -24,9 +24,7 @@ export const routes = [
     path: '/customer-success',
     name: 'customer-success',
     component: () => import('@/views/CustomerSuccessView.vue'),
-    meta: {
-      auth: true,
-    },
+    meta: { auth: true },
   },
 ]
 const router = createRouter({
