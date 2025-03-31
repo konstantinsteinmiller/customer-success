@@ -36,13 +36,13 @@ export const authenticateGoogle = async (req: Request, res: Response) => {
 
     accessToken = response.data.access_token
 
-    const token = jwt.sign(userDetails, config.JWT_SECRET!, { expiresIn: '1h' })
+    const token = jwt.sign(userDetails, config.JWT_SECRET!, { expiresIn: '8h' })
     logger.info(`JWT token: ${token}`)
     // Send token as a secure cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: config.isProductionEnv,
-      maxAge: 3600000, // 1 hour
+      maxAge: 3600000 * 8, // 8 hour
       sameSite: config.isProductionEnv ? 'none' : 'strict',
       path: '/api',
     })
@@ -65,7 +65,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     res.clearCookie('token', {
       httpOnly: true,
       secure: config.isProductionEnv,
-      maxAge: 3600000, // 1 hour
+      maxAge: 3600000 * 8, // 8 hour
       sameSite: config.isProductionEnv ? 'none' : 'strict',
       path: '/api',
     })

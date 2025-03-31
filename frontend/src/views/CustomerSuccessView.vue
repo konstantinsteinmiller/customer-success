@@ -122,6 +122,7 @@ const totalVisitors = computed(() => {
 .v-card
   &.v-card__loader--hidden :deep(.v-card__loader)
     display: none
+    z-index: -1
 </style>
 
 <i18n>

@@ -4,7 +4,7 @@
 - [x] mock GET info/processData/{companyId}
 - [x] Thomas macht einen company abhängigen info/processData endpoint
 - [x] Thomas macht companyIds endpoint
-- [ ] Merit braucht nur die Summe über alle Surveys für die company UND aggregiert über alle relevanten companies
+- [x] Merit braucht nur die Summe über alle Surveys für die company UND aggregiert über alle relevanten companies
   - das ganze für 10-12 properties
 - [ ] nächtlich companies fetchend und nach produktiven Firmen filtern
 - [ ] seperate liste zum auswählen der produktiven/relevanten companies

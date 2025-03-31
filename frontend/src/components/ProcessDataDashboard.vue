@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ComputedRef, Ref, ref, watch } from 'vue'
-import { transformSurveyData } from '@/utils/transformData'
-import { indexOf, pick } from 'lodash'
+import { computed, ComputedRef, Ref, ref } from 'vue'
+import { getAllRelevantCompaniesAvgKPIs, transformSurveyData } from '@/utils/transformData'
+import { pick } from 'lodash'
 import { useRoute } from 'vue-router'
+import { DASHBOARD_KPI_SORTING_ORDER } from '@/config/constants'
+import { RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
+import KPIComparison from '@/components/KPIComparison.vue'
 
 const props = defineProps({
   data: {
@@ -20,30 +23,6 @@ const route = useRoute()
 const { t } = useI18n()
 const surveyFiltersList: any[] = []
 
-/* sort by specific order */
-const kpiSortList = [
-  'totalSurveys',
-  'totalCompanies',
-
-  'avgQuestionsPerTeam',
-  'participants',
-  'participationRate',
-  'totalFeedForwards',
-
-  'avgFeedForwardsPerQuestion',
-  'avgFeedForwardsPerSurvey',
-
-  'feedForwardsPerRespondentPerQuestion',
-  'transparencyRate',
-  'feedForwardHandlingRate',
-
-  'percentageOfFeedforwardsThatWereMarkedDiscussed',
-
-  'tasksCreatedFromFeedForwards',
-  'closingRatePerSurvey',
-  'delegationRate',
-]
-
 const applySurveyFilters = (dataList: any[]) => {
   return dataList
 }
@@ -57,23 +36,20 @@ const selectedCompanySurveysList = computed(() => {
   return calculateAvgKPIs(props.data?.[selectedCompanyId.value]?.surveysList || [])
 })
 
-const totalSurveys: ComputedRef<number> = computed(() => {
-  return props.data?.[selectedCompanyId.value]?.surveysList.length
-})
 const totalCompanies: ComputedRef<number | undefined> = computed(() => {
-  return Object.keys(props.data)?.length
+  return Object.values(props.data).filter(company => company?.surveysList?.length >= 1)?.length
 })
 
 const calculateAvgKPIs = (surveysList: any[]) => {
   return surveysList.map((survey: any) => {
     const percentageOfFeedforwardsThatWereMarkedDiscussed =
-      survey.totalFeedForwards / survey.feedForwardsMarkedDiscussed
+      survey.feedForwardsMarkedDiscussed > 0 ? survey.totalFeedForwards / survey.feedForwardsMarkedDiscussed : 0
 
-    // Average Number of FF per Question = Total Number of Feedforwards / Average Questions per Team
     // avgFeedForwardsPerSurvey -> calculated in transformSurveyData
 
     // Average Number of FF per Survey
-    const avgFeedForwardsPerQuestion = survey.totalFeedForwards / survey.avgQuestionsPerTeam
+    const avgFeedForwardsPerQuestion =
+      survey.avgQuestionsPerTeam > 0 ? survey.totalFeedForwards / survey.avgQuestionsPerTeam : 0
 
     const relevantSurveyMetricsList = pick(survey, [
       'avgQuestionsPerTeam',
@@ -92,7 +68,7 @@ const calculateAvgKPIs = (surveysList: any[]) => {
 
     return {
       ...relevantSurveyMetricsList,
-      totalSurveys: totalSurveys.value,
+      totalSurveys: surveysList.length,
       totalCompanies: totalCompanies.value,
       percentageOfFeedforwardsThatWereMarkedDiscussed,
       avgFeedForwardsPerQuestion,
@@ -100,44 +76,44 @@ const calculateAvgKPIs = (surveysList: any[]) => {
   })
 }
 
-watch(
-  selectedCompanySurveysList,
-  newValue => {
-    if (newValue.length) {
-      console.log('relevantSurveyMetricsList: ', selectedCompanySurveysList.value)
-    }
-  },
-  { immediate: true }
-)
-
 const filteredProcessDataList = computed(() => {
   if (surveyFiltersList.length) {
     return applySurveyFilters(surveyFiltersList)
   }
 
-  // console.log('selectedCompanySurveysList.value: ', selectedCompanySurveysList.value)
+  /* avg over all surveys of selected company */
   const summedProcessData = transformSurveyData(selectedCompanySurveysList.value)
-  const summedRelevantCompaniesProcessDataList = Object.values(props.data).map((company: any) => {
-    const companySurveysList = calculateAvgKPIs(company.surveysList)
-    return transformSurveyData(companySurveysList)
-  })
+  const summedRelevantCompaniesProcessDataList: RelevantSurveyMetrics[] = Object.values(props.data).map(
+    (company: any) => {
+      const companySurveysList = calculateAvgKPIs(company.surveysList)
+      return transformSurveyData(companySurveysList)
+    }
+  )
+
+  const referenceProcessMetrics: RelevantSurveyMetrics = getAllRelevantCompaniesAvgKPIs(
+    summedRelevantCompaniesProcessDataList
+  )
 
   const sortedSummedProcessData = []
-  Object.keys(summedProcessData).forEach((key: string) => {
-    const index = kpiSortList.findIndex(kpi => kpi === key)
+  Object.keys(summedProcessData).forEach((key: SurveyKPI) => {
+    const index = DASHBOARD_KPI_SORTING_ORDER.findIndex((kpi: SurveyKPI) => kpi === key)
 
     if (index >= 0) {
       /* take the kpi value from the summedProcessData and set in
-       * sortedSummedProcessData the index sorted */
-      sortedSummedProcessData[index] = summedProcessData[key]
+       * sortedSummedProcessData the index sorted. once for
+       * the current company and once for the avg over all companies */
+      sortedSummedProcessData[index] = {
+        current: summedProcessData[key],
+        companiesAvg: referenceProcessMetrics[key],
+      }
     }
   })
-  console.log('sortedSummedProcessData: ', sortedSummedProcessData)
-  // summedProcessData
+  // sortedSummedProcessData.length &&
+  // console.log('sortedSummedProcessData: ', JSON.stringify(sortedSummedProcessData, null, 2))
 
   if (selectedCompanySurveysList.value.length) {
-    console.log('summedProcessData: ', summedProcessData)
     console.log('summedRelevantCompaniesProcessDataList: ', summedRelevantCompaniesProcessDataList)
+    console.log('referenceProcessMetrics: ', referenceProcessMetrics)
   }
 
   return sortedSummedProcessData
@@ -149,27 +125,36 @@ const filteredProcessDataList = computed(() => {
     <v-toolbar-title class="text-3xl font-bold"
       >{{ t('customerSuccess', { companyName: selectedCompanyName }) }}
     </v-toolbar-title>
-    <!--    <v-spacer />-->
-    <!--    <v-btn icon>-->
-    <!--      <v-icon>mdi-dots-vertical</v-icon>-->
-    <!--    </v-btn>-->
   </v-toolbar>
 
-  <v-row class="px-3 py-6 mb-6 gap-4 justify-between">
+  <v-row
+    class="px-3 py-6 mb-6 gap-4 justify-between"
+    v-if="filteredProcessDataList.length"
+  >
     <v-card
       v-for="(kpi, index) in filteredProcessDataList"
-      :key="kpi"
-      class="basis-[31%] flex-grow"
+      :key="kpi.current"
+      class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
       :class="{ 'v-card__loader--hidden': !isLoading }"
       :disabled="isLoading"
       :loading="isLoading"
     >
-      <v-card-text>{{ kpiSortList[index] }}: {{ kpi }}</v-card-text>
+      <v-card-text>
+        <KPIComparison
+          :kpi="kpi"
+          :id="DASHBOARD_KPI_SORTING_ORDER[index]"
+        />
+      </v-card-text>
     </v-card>
   </v-row>
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.v-card
+  &.v-card__loader--hidden :deep(.v-card__loader)
+    display: none
+    z-index: -1
+</style>
 
 <i18n>
 en:

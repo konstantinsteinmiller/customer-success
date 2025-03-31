@@ -6,8 +6,8 @@ import NodeCache from 'node-cache'
 import { SurveyMetricsService } from '@/services/survey-metrics.service'
 import { CompaniesService } from '@/services/companies.service'
 
-// Initialize the cache with a TTL (time-to-live) of 1 hour
-const cache = new NodeCache({ stdTTL: 3600 })
+// Initialize the cache with a TTL (time-to-live) of 6 hour
+const cache = new NodeCache({ stdTTL: 3600 * 6 })
 
 const surveyMetricsService = new SurveyMetricsService()
 const companiesService = new CompaniesService()

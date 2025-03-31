@@ -7,3 +7,27 @@ export const CHART_COLORS = {
   purple: 'rgb(153, 102, 255)',
   grey: 'rgb(201, 203, 207)',
 }
+
+/* sort by specific order */
+export const DASHBOARD_KPI_SORTING_ORDER = [
+  'totalSurveys',
+  'totalCompanies',
+
+  'avgQuestionsPerTeam',
+  'participants',
+  'participationRate',
+  'totalFeedForwards',
+
+  'avgFeedForwardsPerQuestion',
+  'avgFeedForwardsPerSurvey',
+
+  'feedForwardsPerRespondentPerQuestion',
+  'transparencyRate',
+  'feedForwardHandlingRate',
+
+  'percentageOfFeedforwardsThatWereMarkedDiscussed',
+
+  'tasksCreatedFromFeedForwards',
+  'closingRatePerSurvey',
+  'delegationRate',
+]

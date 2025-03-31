@@ -1,6 +1,7 @@
-import { SurveyMetrics } from 'server/src/types/api'
+import { SurveyMetrics } from '@/../../server/src/types/api'
+import { RelevantSurveyMetrics } from '@/types/SurveyMetrics'
 
-export const transformSurveyData = (dataList: SurveyMetrics[]): Partial<SurveyMetrics> => {
+export const transformSurveyData = (dataList: SurveyMetrics[]): RelevantSurveyMetrics => {
   const totalEntries = dataList.length
   return dataList.reduce((acc, curr, index) => {
     Object.keys(curr).forEach(key => {
@@ -12,7 +13,7 @@ export const transformSurveyData = (dataList: SurveyMetrics[]): Partial<SurveyMe
     })
 
     /* average them out */
-    if (index === totalEntries - 1 && totalEntries > 0) {
+    if (index === totalEntries - 1) {
       Object.keys(acc).forEach(key => {
         if (key === 'totalFeedForwards') {
           acc['avgFeedForwardsPerSurvey'] = +(acc[key] / totalEntries).toFixed(2)
@@ -23,4 +24,36 @@ export const transformSurveyData = (dataList: SurveyMetrics[]): Partial<SurveyMe
     }
     return acc
   }, {})
+}
+
+export function getAllRelevantCompaniesAvgKPIs(relevantList: RelevantSurveyMetrics[]): RelevantSurveyMetrics {
+  /* filter out all companies that have no surveys */
+  const cleanedRelevantCompaniesList = relevantList.filter(company => company.totalCompanies >= 0)
+
+  const totalCompanies = cleanedRelevantCompaniesList.length || 1 /* to avoid division by 0 */
+
+  /* now sum over all companies and surveys to create reference value for each metric */
+  return cleanedRelevantCompaniesList.reduce(
+    (acc: Partial<RelevantSurveyMetrics>, curr: RelevantSurveyMetrics, index: number) => {
+      for (const key in curr) {
+        /* sum up each key of each company */
+        const value = curr[key]
+        if (key in acc) {
+          acc[key] += value
+        } else {
+          acc[key] = value
+        }
+
+        /* on last item, generate avg for each key */
+        if (index === totalCompanies - 1) {
+          if (acc[key] === undefined) {
+            acc[key] = 0
+          }
+          acc[key] = +(acc[key] / totalCompanies).toFixed(2)
+        }
+      }
+      return acc
+    },
+    {}
+  )
 }
