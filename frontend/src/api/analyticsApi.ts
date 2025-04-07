@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { DateRange } from '../types/api'
+import { Company } from '@/../../server/src/types/api'
 
 export const fetchVisitorData = async (range: DateRange) => {
   try {

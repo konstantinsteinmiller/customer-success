@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { googleSdkLoaded } from 'vue3-google-login'
 import axios from 'axios'
-import { useAuth } from '@/use/auth.ts'
+import { useAuth } from '@/use/useAuth.js'
 import { useAuthStore } from '@/stores/authStore.ts'
 
 const { t } = useI18n()

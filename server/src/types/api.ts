@@ -42,9 +42,12 @@ export interface CompaniesListResult {
   data: Company[]
 }
 
+export interface CompanyWithSurveys {
+  name: string
+  id: string
+  surveysList: SurveyMetrics[]
+}
+
 export interface CompanyToSurveyMap {
-  [key: string]: {
-    name: string
-    surveysList: SurveyMetrics[]
-  }
+  [key: string]: CompanyWithSurveys
 }

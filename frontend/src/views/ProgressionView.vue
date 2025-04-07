@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue'
 import { useAnalytics } from '@/use/useAnalytics'
-import DateSelector from '@/components/DateSelector.vue'
-import ProcessDataDashboard from '@/components/ProcessDataDashboard.vue'
 import { useUser } from '@/use/useUser'
 import { Company } from '@/../../server/src/types/api'
+import SurveyProgressionDashboard from '@/components/SurveyProgressionDashboard.vue'
 
 const { getProcessData, companiesToSurveyMap } = useAnalytics()
 const { getSelectedCompanies, selectedCompaniesList } = useUser()
 
 const isLoading: Ref<boolean> = ref(false)
 
-const onDateChange = () => fetchData()
 const fetchData = async () => {
   isLoading.value = true
   try {
@@ -32,43 +30,39 @@ const fetchData = async () => {
     isLoading.value = false
   }
 }
+fetchData()
 </script>
 
 <template>
-  <div class="py-4" />
-  <ProcessDataDashboard
+  <SurveyProgressionDashboard
     :data="companiesToSurveyMap"
     :isLoading="isLoading"
   />
+  <!--  <div class="py-4" />-->
+  <!--  <v-toolbar class="">-->
+  <!--    <v-toolbar-title class="h-auto">-->
+  <!--      <div class="text-3xl font-bold flex">{{ t('comparison') }}</div>-->
+  <!--    </v-toolbar-title>-->
+  <!--  </v-toolbar>-->
 
-  <v-card
-    class="visitor-card"
-    :class="{ 'v-card__loader--hidden': !isLoading }"
-    :disabled="isLoading"
-    :loading="isLoading"
-  >
-    <template #loader="{ isActive }">
-      <v-progress-circular
-        v-if="isActive && isLoading"
-        :active="isActive"
-        :size="70"
-        color="amber"
-        indeterminate
-      />
-    </template>
-    <v-card-text>
-      <div
-        class="h-64"
-        v-if="isLoading"
-      ></div>
-      <v-row
-        class="items-center"
-        v-show="false"
-      >
-        <DateSelector @update:model-value="onDateChange" />
-      </v-row>
-    </v-card-text>
-  </v-card>
+  <!--  <v-card-->
+  <!--    class="visitor-card"-->
+  <!--    :class="{ 'v-card__loader&#45;&#45;hidden': !isLoading }"-->
+  <!--    :disabled="isLoading"-->
+  <!--    :loading="isLoading"-->
+  <!--  >-->
+  <!--    <template #loader="{ isActive }">-->
+  <!--      <v-progress-circular-->
+  <!--        v-if="isActive"-->
+  <!--        :active="isActive"-->
+  <!--        :size="70"-->
+  <!--        color="amber"-->
+  <!--        indeterminate-->
+  <!--      />-->
+  <!--    </template>-->
+  <!--    <v-card-title></v-card-title>-->
+  <!--    <v-card-text> </v-card-text>-->
+  <!--  </v-card>-->
 </template>
 
 <style lang="sass" scoped>
@@ -79,20 +73,7 @@ const fetchData = async () => {
   height: 100%
 
 .v-card
-  &.v-card__loader--hidden
-    height: 0
   &.v-card__loader--hidden :deep(.v-card__loader)
     display: none
     z-index: -1
 </style>
-
-<i18n>
-en:
-  yesRemove: Yes Remove
-  cancel: Cancel
-  visitors: Visitors
-de:
-  yesRemove: Ja, entfernen
-  cancel: Abbrechen
-  visitors: Besucher
-</i18n>

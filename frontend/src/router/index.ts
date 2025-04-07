@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuth } from '@/use/auth.ts'
+import { useAuth } from '@/use/useAuth.ts'
 
 const auth = useAuth()
 
@@ -21,9 +21,27 @@ export const routes = [
     component: () => import('@/views/ForbiddenView.vue'),
   },
   {
+    path: '/visitors',
+    name: 'visitors',
+    component: () => import('@/views/VisitorsView.vue'),
+    meta: { auth: true },
+  },
+  {
     path: '/customer-success',
     name: 'customer-success',
     component: () => import('@/views/CustomerSuccessView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/customer-success/companies',
+    name: 'companies',
+    component: () => import('@/views/CompaniesView.vue'),
+    meta: { auth: true },
+  },
+  {
+    path: '/customer-success/progression',
+    name: 'progression',
+    component: () => import('@/views/ProgressionView.vue'),
     meta: { auth: true },
   },
 ]

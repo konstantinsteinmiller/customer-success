@@ -3,6 +3,7 @@ import { logger } from '@/utils/logger'
 import axios from 'axios'
 import { config } from '@/config/env'
 import { PiwikAuthResult, PiwikQueryResult } from '@/types/piwik'
+import { SurveyMetricsService } from '@/services/survey-metrics.service'
 
 let tokenExpiry: number = 0
 let piwikAccessToken: string = ''
@@ -66,6 +67,9 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
       metric_filters: null,
     })
     // logger.info(queryResult.data.data)
+    /* save visitor data to db */
+    // const visitorService = new VisitorService()
+    // visitorService.saveVisitorData(queryResult.data.data)
 
     res.status(200).json({
       message: 'Here is the monthly visiting user data you asked for',

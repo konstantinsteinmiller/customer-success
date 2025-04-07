@@ -21,14 +21,14 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
   // first: Check the in-memory cache
   const cachedData: CompanyToSurveyMap | undefined = cache.get<CompanyToSurveyMap>(cacheKeySurveyMetrics)
   if (cachedData) {
-    console.log('Serving from cache', cachedData)
+    // console.log('Serving from cache', cachedData)
     companyToSurveyMap = cachedData
   }
 
   // second: Check MongoDB for the latest data
   const dbData: CompanyToSurveyMap | null = await surveyMetricsService.getSurveyMetrics()
   if (dbData) {
-    console.log('Serving from MongoDB', dbData)
+    // console.log('Serving from MongoDB', dbData)
     cache.set(cacheKeySurveyMetrics, dbData) // Update the cache
     companyToSurveyMap = dbData
   }
@@ -41,7 +41,7 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
       if (!companies?.length) {
         return res.status(404).json({ message: 'No companies found' })
       }
-      logger.info(companies.slice(0, Math.min(3, companies.length - 1)))
+      // logger.info(companies.slice(0, Math.min(3, companies.length - 1)))
 
       /* store companies in db and cache */
       await companiesService.saveCompanies(companies)
@@ -59,10 +59,18 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
       /* map from a company id to a company name with all it's surveys */
       companyToSurveyMap = result?.reduce((acc, res, index) => {
         const companyId = companies[index]?.id
-        acc[companyId] = { name: companies[index]?.name, surveysList: res.data }
+        acc[companyId] = { name: companies[index]?.name, id: companyId, surveysList: res.data }
         return acc
       }, {})
-      logger.info(companyToSurveyMap)
+
+      /* only log first 5 entries */
+      logger.info(
+        Object.values(companyToSurveyMap).reduce((acc, res, index) => {
+          if (index >= 5) return acc
+          acc[res.id] = res
+          return acc
+        }, {})
+      )
 
       // Step 4: Save the data to MongoDB and update the cache
       await surveyMetricsService.saveSurveyMetrics(companyToSurveyMap)

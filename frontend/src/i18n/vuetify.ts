@@ -1,5 +1,6 @@
 export default {
   en: {
+    open: 'Open',
     months: {
       short: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       long: [
@@ -23,6 +24,7 @@ export default {
     },
   },
   de: {
+    open: 'Öffnen',
     months: {
       short: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
       long: [

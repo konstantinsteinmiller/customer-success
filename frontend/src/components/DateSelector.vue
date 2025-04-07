@@ -65,6 +65,8 @@ emit('update:modelValue', getDateRange.value)
         prepend-icon="mdi-calendar"
         readonly
         v-bind="props"
+        class="pt-3 pr-4"
+        style="margin-bottom: -16px"
       ></v-text-field>
     </template>
 

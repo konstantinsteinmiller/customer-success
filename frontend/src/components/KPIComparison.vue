@@ -124,24 +124,22 @@ const isPercentValue = (value: string) => {
       </div>
 
       <div
-        class="text-center align-center"
+        class="grid grid-cols-5 text-center align-center ml-6"
         style="margin-top: -20px"
       >
-        <b
-          :style="{
-            color: CHART_COLORS.blue,
-            // textShadow: `#299867 0 0 1px`,
-          }"
-          >{{ props.kpi.current }}{{ isPercentValue(props.id) ? '%' : '' }}</b
+        <span
+          class="!font-bold !text-[1.1rem] text-right col-start-1 col-span-2"
+          :style="{ color: CHART_COLORS.blue }"
         >
-        &nbsp;&nbsp;-&nbsp;&nbsp;
-        <b
-          :style="{
-            color: CHART_COLORS.red,
-            // textShadow: `#299867 0 0 1px`,
-          }"
-          >{{ props.kpi.companiesAvg }}{{ isPercentValue(props.id) ? '%' : '' }}</b
+          {{ props.kpi.current }}{{ isPercentValue(props.id) ? '%' : '' }}
+        </span>
+        <span class="col-start-3">-</span>
+        <span
+          class="font-bold !text-[1.1rem] text-left col-start-4 col-span-2"
+          :style="{ color: CHART_COLORS.red }"
         >
+          {{ props.kpi.companiesAvg }}{{ isPercentValue(props.id) ? '%' : '' }}
+        </span>
       </div>
     </div>
   </div>
@@ -168,37 +166,7 @@ const isPercentValue = (value: string) => {
 en:
   currentCompany: "Company"
   allCompanyAverage: "all companies avg."
-  totalSurveys: "Total surveys"
-  totalCompanies: "Total companies"
-  avgQuestionsPerTeam: "Avg. questions per team"
-  participants: "Participants"
-  participationRate: "Participation rate"
-  totalFeedForwards: "Total FeedForwards"
-  avgFeedForwardsPerQuestion: "Avg. FeedForwards per question"
-  avgFeedForwardsPerSurvey: "Avg. FeedForwards per survey"
-  feedForwardsPerRespondentPerQuestion: "FeedForwards per respondent per question"
-  transparencyRate: "Transparency rate"
-  feedForwardHandlingRate: "FeedForward handling rate"
-  percentageOfFeedforwardsThatWereMarkedDiscussed: "% Feedforwards marked discussed"
-  tasksCreatedFromFeedForwards: "Tasks created from FeedForwards"
-  closingRatePerSurvey: "Closing rate per survey"
-  delegationRate: "Delegation rate"
 de:
   currentCompany: "Unternehmen"
   allCompanyAverage: "Ø aller Unternehmen"
-  totalSurveys: "Gesamt Umfragen"
-  totalCompanies: "Gesamt Unternehmen"
-  avgQuestionsPerTeam: "Ø Fragen pro Team"
-  participants: "Teilnehmer"
-  participationRate: "Teilnahmequote"
-  totalFeedForwards: "Gesamt FeedForwards"
-  avgFeedForwardsPerQuestion: "Ø FeedForwards pro Frage"
-  avgFeedForwardsPerSurvey: "Ø FeedForwards pro Umfrage"
-  feedForwardsPerRespondentPerQuestion: "FeedForwards pro Befragtem pro Frage"
-  transparencyRate: "Transparenzrate"
-  feedForwardHandlingRate: "FeedForward-Bearbeitungsrate"
-  percentageOfFeedforwardsThatWereMarkedDiscussed: "% Feedforwards als diskutiert markiert"
-  tasksCreatedFromFeedforwards: "Aufgaben aus Feedforwards erstellt"
-  closingRatePerSurvey: "Abschlussrate pro Umfrage"
-  delegationRate: "Delegationsrate"
 </i18n>

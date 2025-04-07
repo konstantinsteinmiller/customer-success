@@ -3,13 +3,13 @@ import { useI18n } from 'vue-i18n'
 import { computed, ComputedRef, Ref, ref, watch } from 'vue'
 import { getAllRelevantCompaniesAvgKPIs, transformSurveyData } from '@/utils/transformData'
 import { pick } from 'lodash'
-import { DASHBOARD_KPI_SORTING_ORDER } from '@/config/constants'
+import { CHART_COLORS, DASHBOARD_KPI_SORTING_ORDER } from '@/config/constants'
 import { RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
-import KPIComparison from '@/components/KPIComparison.vue'
 import CompanySelector from '@/components/companySelector.vue'
 import { useAnalytics } from '@/use/useAnalytics'
 import { Company } from '@/../../server/src/types/api'
 import { useUser } from '@/use/useUser'
+import LineChart from '@/components/LineChart.vue'
 
 const props = defineProps({
   data: {
@@ -135,13 +135,17 @@ const filteredProcessDataList = computed(() => {
 
   return sortedSummedProcessData
 })
+
+const labelsList = computed(() => {
+  return []
+})
 </script>
 
 <template>
   <v-toolbar>
     <v-toolbar-title class="h-auto">
       <div class="text-3xl font-bold flex">
-        {{ t('customerSuccess', { companyName: selectedCompanyName }) }}
+        {{ t('comparison', { companyName: selectedCompanyName }) }}
       </div>
     </v-toolbar-title>
     <v-toolbar-items>
@@ -153,24 +157,57 @@ const filteredProcessDataList = computed(() => {
   </v-toolbar>
 
   <v-row
-    class="px-3 py-6 mb-6 gap-4 justify-between"
+    class="px-3 py-6 mb-6 gap-4 min-h-64 justify-between"
     v-if="filteredProcessDataList.length"
   >
     <v-card
-      v-for="(kpi, index) in filteredProcessDataList"
-      :key="`${kpi.current}-${index}-${kpi.companiesAvg}`"
-      class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
+      v-if="isLoading"
+      class="visitor-card"
       :class="{ 'v-card__loader--hidden': !isLoading }"
       :disabled="isLoading"
       :loading="isLoading"
     >
-      <v-card-text>
-        <KPIComparison
-          :kpi="kpi"
-          :id="DASHBOARD_KPI_SORTING_ORDER[index]"
+      <template #loader="{ isActive }">
+        <v-progress-circular
+          v-if="isActive"
+          :active="isActive"
+          :size="70"
+          color="amber"
+          indeterminate
         />
-      </v-card-text>
+      </template>
+      <v-card-title></v-card-title>
+      <v-card-text
+        ><div class="min-h-64">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt recusandae tempore totam unde vero
+          voluptas. Ab commodi deserunt distinctio esse ipsum modi molestiae, necessitatibus optio quia temporibus?
+          Dolor, praesentium vitae?
+        </div></v-card-text
+      >
     </v-card>
+    <template v-else>
+      <v-card
+        v-for="(kpi, index) in filteredProcessDataList"
+        :key="`${kpi.current}-${index}-${kpi.companiesAvg}`"
+        class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
+        :class="{ 'v-card__loader--hidden': !isLoading }"
+        :disabled="isLoading"
+        :loading="isLoading"
+      >
+        <v-card-text>
+          <!--        <KPIComparison-->
+          <!--          :kpi="kpi"-->
+          <!--          :id="DASHBOARD_KPI_SORTING_ORDER[index]"-->
+          <!--        />-->
+          <LineChart
+            :title="t('comparison')"
+            :data="kpi"
+            :labels="labelsList"
+            :color="CHART_COLORS.blue"
+            :background-color="'rgba(161,225,255,0.66)'"
+          />
+        </v-card-text> </v-card
+    ></template>
   </v-row>
 </template>
 
@@ -178,7 +215,9 @@ const filteredProcessDataList = computed(() => {
 en:
   loading: "Loading"
   customerSuccess: "{companyName}'s Customer Success"
+  comparison: "Survey Comparison"
 de:
   loading: "Laden"
   customerSuccess: "{companyName}'s Kundenerfolg"
+  comparison: "Umfrage Vergleich"
 </i18n>

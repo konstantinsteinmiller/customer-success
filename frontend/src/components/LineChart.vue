@@ -96,7 +96,8 @@ watch(
       chartData.datasets[0].data = newData
       chartInstance.update()
     }
-  }
+  },
+  { deep: true }
 )
 
 // Create the chart when the component is mounted

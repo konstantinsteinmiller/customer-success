@@ -4,12 +4,13 @@ import { SurveyMetrics } from '@/types/api'
 export interface SurveyMetricsDocument extends Document {
   index: string
   lastUpdated: Date
-  surveysMap: { [id: string]: { name: string; surveysList: SurveyMetrics[] } }
+  surveysMap: { [id: string]: { name: string; id: string; surveysList: SurveyMetrics[] } }
 }
 
 const SurveyMetricsEntrySchema = new Schema(
   {
     name: { type: String, required: true },
+    id: { type: String, required: true },
     surveysList: [
       {
         surveyNo: { type: Number, required: true },

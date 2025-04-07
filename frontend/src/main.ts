@@ -8,7 +8,7 @@ import App from '@/App.vue'
 import router from '@/router'
 import { setupVuetify } from '@/utils/setupVuetify.ts'
 import { i18n } from '@/utils/setupI18n.ts'
-import { useAuth } from '@/use/auth.ts'
+import { useAuth } from '@/use/useAuth.ts'
 import { configureAxios } from '@/api/config.ts'
 
 configureAxios()

@@ -2,9 +2,12 @@ import { Request, Response, NextFunction } from 'express'
 import { logger } from '@/utils/logger'
 import { config } from '@/config/env'
 import jwt from 'jsonwebtoken'
+import { User } from '@/models/user.model'
 import axios from 'axios'
+import { UserService } from '@/services/user.service'
 
 let accessToken: string | null = null
+const userService = new UserService()
 
 export const authenticateGoogle = async (req: Request, res: Response) => {
   try {
@@ -35,6 +38,13 @@ export const authenticateGoogle = async (req: Request, res: Response) => {
     const userDetails = userResponse.data
 
     accessToken = response.data.access_token
+
+    const user: User = {
+      name: userDetails.name,
+      email: userDetails.email,
+      picture: userDetails.picture,
+    }
+    await userService.saveUser(user)
 
     const token = jwt.sign(userDetails, config.JWT_SECRET!, { expiresIn: '8h' })
     logger.info(`JWT token: ${token}`)
