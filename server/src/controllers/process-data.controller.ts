@@ -2,20 +2,14 @@ import { Request, Response, NextFunction } from 'express'
 import { logger } from '@/utils/logger'
 import { http } from '@/config/api'
 import type { CompaniesListResult, CompanyToSurveyMap } from '@/types/api'
-import NodeCache from 'node-cache'
 import { SurveyMetricsService } from '@/services/survey-metrics.service'
 import { CompaniesService } from '@/services/companies.service'
-
-// Initialize the cache with a TTL (time-to-live) of 6 hour
-const cache = new NodeCache({ stdTTL: 3600 * 6 })
+import { cache, cacheKeySurveyMetrics, cacheKeyCompanies } from '@/utils/cache'
 
 const surveyMetricsService = new SurveyMetricsService()
 const companiesService = new CompaniesService()
 
 export const getProcessData = async (req: Request, res: Response, next: NextFunction) => {
-  const cacheKeySurveyMetrics = `surveyMetrics`
-  const cacheKeyCompanies = `companies`
-
   let companyToSurveyMap: CompanyToSurveyMap | null | undefined = null
 
   // first: Check the in-memory cache

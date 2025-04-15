@@ -4,6 +4,7 @@ import { Chart, registerables } from 'chart.js'
 import { useI18n } from 'vue-i18n'
 import { CHART_COLORS } from '@/config/constants'
 import { useRoute } from 'vue-router'
+import { isKpiPercentValue } from '@/utils/analytics'
 
 Chart.register(...registerables)
 const route = useRoute()
@@ -75,7 +76,7 @@ onMounted(() => {
                 label += ': '
               }
               if (context.parsed.y !== null) {
-                label += `${context.parsed.y}${isPercentValue(props.id) ? '%' : ''}`
+                label += `${context.parsed.y}${isKpiPercentValue(props.id) ? '%' : ''}`
               }
               return label
             },
@@ -87,18 +88,6 @@ onMounted(() => {
     },
   })
 })
-
-const percentValuesList = [
-  'transparencyRate',
-  'feedForwardHandlingRate',
-  'delegationRate',
-  'closingRatePerSurvey',
-  'participationRate',
-  'percentageOfFeedforwardsThatWereMarkedDiscussed',
-]
-const isPercentValue = (value: string) => {
-  return percentValuesList.includes(value)
-}
 </script>
 
 <template>
@@ -131,14 +120,14 @@ const isPercentValue = (value: string) => {
           class="!font-bold !text-[1.1rem] text-right col-start-1 col-span-2"
           :style="{ color: CHART_COLORS.blue }"
         >
-          {{ props.kpi.current }}{{ isPercentValue(props.id) ? '%' : '' }}
+          {{ props.kpi.current }}{{ isKpiPercentValue(props.id) ? '%' : '' }}
         </span>
         <span class="col-start-3">-</span>
         <span
           class="font-bold !text-[1.1rem] text-left col-start-4 col-span-2"
           :style="{ color: CHART_COLORS.red }"
         >
-          {{ props.kpi.companiesAvg }}{{ isPercentValue(props.id) ? '%' : '' }}
+          {{ props.kpi.companiesAvg }}{{ isKpiPercentValue(props.id) ? '%' : '' }}
         </span>
       </div>
     </div>

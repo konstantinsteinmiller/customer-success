@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ComputedRef, Ref, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { getAllRelevantCompaniesAvgKPIs, transformSurveyData } from '@/utils/transformData'
 import { pick } from 'lodash'
 import { DASHBOARD_KPI_SORTING_ORDER } from '@/config/constants'
 import { RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
 import KPIComparison from '@/components/KPIComparison.vue'
 import CompanySelector from '@/components/companySelector.vue'
-import { useAnalytics } from '@/use/useAnalytics'
-import { Company } from '@/../../server/src/types/api'
 import { useUser } from '@/use/useUser'
 
 const props = defineProps({
@@ -23,52 +21,21 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const surveyFiltersList: any[] = []
-const { companiesList } = useAnalytics()
-const { selectedCompaniesList } = useUser()
-
-const applySurveyFilters = (dataList: any[]) => {
-  return dataList
-}
-
-const selectedCompanies = computed(() => {
-  /* if there is a user selection of companies, return the companies */
-  return selectedCompaniesList.value.length
-    ? selectedCompaniesList.value.map(c => ({ id: c.id, name: c.name }))
-    : companiesList.value
-})
-
-/* select the first entry so the company selector is filled with a company */
-watch(
-  () => companiesList.value,
-  () => {
-    selectedCompany.value = selectedCompanies.value[0]
-  },
-  { once: true }
-)
-const selectedCompany: Ref<Company | object> = ref({ name: t('loading'), id: 'loading' })
-const selectedCompanyId: ComputedRef<string> = computed(() => selectedCompany.value.id || '')
-const selectedCompanyName = computed(() => {
-  return props.data?.[selectedCompanyId.value]?.name || ''
-})
+const { selectedCompaniesRef, selectedCompany, totalCompanies } = useUser()
 
 const selectedCompanySurveysList = computed(() => {
   const surveyList = props.data?.[selectedCompany.value.id]?.surveysList
   return calculateAvgKPIs(surveyList || [])
 })
 
-const totalCompanies: ComputedRef<number | undefined> = computed(() => {
-  return selectedCompanies.value?.length
-})
-
 const calculateAvgKPIs = (surveysList: any[]) => {
   return surveysList.map((survey: any) => {
     const percentageOfFeedforwardsThatWereMarkedDiscussed =
-      survey.feedForwardsMarkedDiscussed > 0 ? survey.feedForwardsMarkedDiscussed / survey.totalFeedForwards : 0
+      survey.totalFeedForwards > 0 ? (survey.feedForwardsMarkedDiscussed / survey.totalFeedForwards) * 100 : 0
 
     // Average Number of FF per Survey
     const avgFeedForwardsPerQuestion =
-      survey.avgQuestionsPerTeam > 0 ? survey.totalFeedForwards / survey.avgQuestionsPerTeam : 0
+      survey.totalFeedForwards > 0 ? (survey.avgQuestionsPerTeam / survey.totalFeedForwards) * 100 : 0
 
     const relevantSurveyMetricsList = pick(survey, [
       'avgQuestionsPerTeam',
@@ -96,10 +63,6 @@ const calculateAvgKPIs = (surveysList: any[]) => {
 }
 
 const filteredProcessDataList = computed(() => {
-  if (surveyFiltersList.length) {
-    return applySurveyFilters(surveyFiltersList)
-  }
-
   /* avg over all surveys of selected company */
   const summedProcessData = transformSurveyData(selectedCompanySurveysList.value)
   const summedRelevantCompaniesProcessDataList: RelevantSurveyMetrics[] = Object.values(props.data).map(
@@ -128,11 +91,6 @@ const filteredProcessDataList = computed(() => {
     }
   })
 
-  // if (selectedCompanySurveysList.value.length) {
-  //   console.log('summedRelevantCompaniesProcessDataList: ', summedRelevantCompaniesProcessDataList)
-  //   console.log('referenceProcessMetrics: ', referenceProcessMetrics)
-  // }
-
   return sortedSummedProcessData
 })
 </script>
@@ -141,12 +99,12 @@ const filteredProcessDataList = computed(() => {
   <v-toolbar>
     <v-toolbar-title class="h-auto">
       <div class="text-3xl font-bold flex">
-        {{ t('customerSuccess', { companyName: selectedCompanyName }) }}
+        {{ t('customerSuccess', { companyName: selectedCompany?.name }) }}
       </div>
     </v-toolbar-title>
     <v-toolbar-items>
       <CompanySelector
-        :companies="selectedCompanies"
+        :companies="selectedCompaniesRef"
         v-model="selectedCompany"
       />
     </v-toolbar-items>

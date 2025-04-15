@@ -8,6 +8,9 @@ import { errorHandler } from '@/middlewares/error.middleware'
 import { config } from '@/config/env'
 import registerRoutes from '@/routes'
 
+/* start cron job */
+import '@/cron-job'
+
 const app: any = express()
 
 // Middleware

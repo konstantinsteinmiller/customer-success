@@ -34,35 +34,11 @@ fetchData()
 </script>
 
 <template>
+  <div class="py-4" />
   <SurveyProgressionDashboard
     :data="companiesToSurveyMap"
     :isLoading="isLoading"
   />
-  <!--  <div class="py-4" />-->
-  <!--  <v-toolbar class="">-->
-  <!--    <v-toolbar-title class="h-auto">-->
-  <!--      <div class="text-3xl font-bold flex">{{ t('comparison') }}</div>-->
-  <!--    </v-toolbar-title>-->
-  <!--  </v-toolbar>-->
-
-  <!--  <v-card-->
-  <!--    class="visitor-card"-->
-  <!--    :class="{ 'v-card__loader&#45;&#45;hidden': !isLoading }"-->
-  <!--    :disabled="isLoading"-->
-  <!--    :loading="isLoading"-->
-  <!--  >-->
-  <!--    <template #loader="{ isActive }">-->
-  <!--      <v-progress-circular-->
-  <!--        v-if="isActive"-->
-  <!--        :active="isActive"-->
-  <!--        :size="70"-->
-  <!--        color="amber"-->
-  <!--        indeterminate-->
-  <!--      />-->
-  <!--    </template>-->
-  <!--    <v-card-title></v-card-title>-->
-  <!--    <v-card-text> </v-card-text>-->
-  <!--  </v-card>-->
 </template>
 
 <style lang="sass" scoped>

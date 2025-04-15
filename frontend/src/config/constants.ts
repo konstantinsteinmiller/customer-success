@@ -31,3 +31,23 @@ export const DASHBOARD_KPI_SORTING_ORDER = [
   'closingRatePerSurvey',
   'delegationRate',
 ]
+
+export const PROGRESS_KPI_SORTING_ORDER = [
+  'avgQuestionsPerTeam',
+  'participants',
+  'participationRate',
+  'totalFeedForwards',
+
+  'avgFeedForwardsPerQuestion',
+  // 'avgFeedForwardsPerSurvey', //makes no sense as we only look at one survey at a time
+
+  'feedForwardsPerRespondentPerQuestion',
+  'transparencyRate',
+  'feedForwardHandlingRate',
+
+  'percentageOfFeedforwardsThatWereMarkedDiscussed',
+
+  'tasksCreatedFromFeedForwards',
+  'closingRatePerSurvey',
+  'delegationRate',
+]

@@ -1,8 +1,9 @@
 import { postSelectedCompanies, fetchSelectedCompanies } from '@/api/userApi'
-import { ref, Ref } from 'vue'
+import { computed, ComputedRef, ref, Ref, watch } from 'vue'
 import { CompanyToSurveyMap, Company } from '@/../../server/src/types/api'
 import useToast from '@/use/useToast'
 import { useI18n } from 'vue-i18n'
+import { useAnalytics } from './useAnalytics'
 
 const { addToast } = useToast()
 
@@ -16,6 +17,28 @@ interface CompaniesListResult {
 
 export const useUser = () => {
   const { t } = useI18n()
+  const { companiesList } = useAnalytics()
+
+  /* select the first entry so the company selector is filled with a company */
+  watch(
+    () => companiesList.value,
+    () => {
+      selectedCompany.value = selectedCompaniesRef.value[0]
+    },
+    { once: true }
+  )
+  const selectedCompany: Ref<Company | object> = ref({ name: t('loading'), id: 'loading' })
+
+  const selectedCompaniesRef = computed(() => {
+    /* if there is a user selection of companies, return the companies */
+    return selectedCompaniesList.value.length
+      ? selectedCompaniesList.value.map(c => ({ id: c.id, name: c.name }))
+      : companiesList.value
+  })
+
+  const totalCompanies: ComputedRef<number | undefined> = computed(() => {
+    return selectedCompaniesRef.value?.length
+  })
 
   const getSelectedCompanies = async (): CompanyToSurveyMap | Partial<CompanyToSurveyMap> => {
     isLoadingSelectedCompanies.value = true
@@ -55,5 +78,8 @@ export const useUser = () => {
     selectedCompaniesList,
     isLoadingSaveSelectedCompanies,
     isLoadingSelectedCompanies,
+    selectedCompaniesRef,
+    selectedCompany,
+    totalCompanies,
   }
 }
