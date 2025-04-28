@@ -1,6 +1,6 @@
 import { fetchVisitorData, fetchProcessData } from '@/api/analyticsApi'
 import type { VisitorResult, DateRange, ProcessResult } from '@/types/api'
-import { ref, Ref } from 'vue'
+import { computed, ComputedRef, ref, Ref } from 'vue'
 import { CompanyToSurveyMap, Company } from '@/../../server/src/types/api'
 
 const visitorsDataList: Ref<number[]> | Ref<Promise<number[]>> = ref([])
@@ -8,6 +8,11 @@ const companiesToSurveyMap: Ref<CompanyToSurveyMap> | Ref<Promise<CompanyToSurve
 const companiesList: Ref<Company[]> = ref([])
 const isLoadingVisitorData = ref(false)
 const isLoadingProcessData = ref(false)
+
+const isAnimatingMap: any = ref(new Map())
+const areChartsAnimating: ComputedRef<boolean> = computed(() => {
+  return Object.values(isAnimatingMap.value).some(chart => chart === true)
+})
 
 export const useAnalytics = () => {
   const getVisitorData = async (range: DateRange) => {
@@ -53,5 +58,7 @@ export const useAnalytics = () => {
     visitorsDataList,
     isLoadingProcessData,
     isLoadingVisitorData,
+    isAnimatingMap,
+    areChartsAnimating,
   }
 }

@@ -11,10 +11,15 @@
 - [x] use prod data / create prod env with master as source
 - [ ] select multiple companies from companies select for multiple company comparison
 - [x] Vergleich einzelne Umfrage Kpi vs avg over companies - Line chart
-- [ ] evtl. checkbox mit Standardabweichung
-  - [ ] evtl. checkbox mit Standardabweichung für bar charts
-- [ ] std dev bevorzugt mit fläche, alternativ mit weiterem Datensatz als linie
-- [ ] save visitors data to db
--  progress chart runden
+- [x] evtl. checkbox mit Standardabweichung
+  - [x] evtl. checkbox mit Standardabweichung für bar charts
+- [x] std dev bevorzugt mit fläche, alternativ mit weiterem Datensatz als linie
+- [x] save visitors data to db
+- [x] progress chart runden
+- [ ] Widget drag and drop or select widget order list
+- [x] tail cut 5 last survey in progress chart
+- [ ] be able to print to PDF or similar to allow to forward the view of a clients' data to them https://majidzeno.hashnode.dev/effortless-pdf-generation-in-vue
+- [ ] be able to select a different view with the development over time (half-year intervals) -> see draft
+- [ ] https://joineer.slack.com/archives/C01CV1D3464/p1743603999532109
 
  

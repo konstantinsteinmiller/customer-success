@@ -28,7 +28,10 @@ export class UserService {
   }
 
   async saveUserCompanies(user: Partial<User>, companies: Company[]) {
-    return this.userRepository.saveUserCompanies(user, companies)
+    const existingUser: any = await this.userRepository.findByEmail(user.email as string)
+    if (!existingUser) return null
+    console.log('existingUser: ', existingUser)
+    return this.userRepository.saveUserCompanies(existingUser, companies)
   }
 
   async getUserCompanies(user: Partial<User>): Promise<any> {

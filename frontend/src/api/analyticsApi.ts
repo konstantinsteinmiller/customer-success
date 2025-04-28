@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { DateRange } from '../types/api'
-import { Company } from '@/../../server/src/types/api'
 
 export const fetchVisitorData = async (range: DateRange) => {
   try {
@@ -22,6 +21,7 @@ export const fetchProcessData = async (companyId: string) => {
     const response = await axios.get('/process-data', {
       params: { companyId },
     })
+
     return response.data
   } catch (error: unknown) {
     console.error('Unable to fetch process data:', error)

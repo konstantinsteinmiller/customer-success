@@ -21,7 +21,7 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
 
   // second: Check MongoDB for the latest data
   const dbData: CompanyToSurveyMap | null = await surveyMetricsService.getSurveyMetrics()
-  if (dbData) {
+  if (!cachedData && dbData) {
     // console.log('Serving from MongoDB', dbData)
     cache.set(cacheKeySurveyMetrics, dbData) // Update the cache
     companyToSurveyMap = dbData
@@ -58,13 +58,13 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
       }, {})
 
       /* only log first 5 entries */
-      logger.info(
-        Object.values(companyToSurveyMap).reduce((acc, res, index) => {
-          if (index >= 5) return acc
-          acc[res.id] = res
-          return acc
-        }, {})
-      )
+      // logger.info(
+      //   Object.values(companyToSurveyMap).reduce((acc, res, index) => {
+      //     if (index >= 5) return acc
+      //     acc[res.id] = res
+      //     return acc
+      //   }, {})
+      // )
 
       // Step 4: Save the data to MongoDB and update the cache
       await surveyMetricsService.saveSurveyMetrics(companyToSurveyMap)

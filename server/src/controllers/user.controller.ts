@@ -27,12 +27,12 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
   }
 }
 
-export const getUserCompanies = async (req: Request, res: Response, next: NextFunction) => {
+export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = extractUserFromToken(req)
     const foundUser = await userService.getUserCompanies(user)
     logger.info(`total selected: ${foundUser?.companiesList.length}`)
-    res.status(200).json({ data: foundUser?.companiesList || [] })
+    res.status(200).json({ data: foundUser })
   } catch (error) {
     logger.error(error)
     next(error)

@@ -44,6 +44,7 @@ export const authenticateGoogle = async (req: Request, res: Response) => {
       email: userDetails.email,
       picture: userDetails.picture,
     }
+    console.log('user: ', user)
     await userService.saveUser(user)
 
     const token = jwt.sign(userDetails, config.JWT_SECRET!, { expiresIn: '8h' })

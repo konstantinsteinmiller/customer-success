@@ -7,7 +7,7 @@ import { useUser } from '@/use/useUser'
 import { Company } from '@/../../server/src/types/api'
 
 const { getProcessData, companiesToSurveyMap } = useAnalytics()
-const { getSelectedCompanies, selectedCompaniesList } = useUser()
+const { selectedCompaniesList } = useUser()
 
 const isLoading: Ref<boolean> = ref(false)
 
@@ -15,7 +15,7 @@ const onDateChange = () => fetchData()
 const fetchData = async () => {
   isLoading.value = true
   try {
-    const [processResult] = await Promise.all([getProcessData(), getSelectedCompanies()])
+    const [processResult] = await Promise.all([getProcessData()])
 
     /* filter out non-selected companies from processResult */
     companiesToSurveyMap.value = {}
@@ -35,7 +35,6 @@ const fetchData = async () => {
 </script>
 
 <template>
-  <div class="py-4" />
   <ProcessDataDashboard
     :data="companiesToSurveyMap"
     :isLoading="isLoading"

@@ -5,6 +5,7 @@ import { RelevantSurveyMetrics } from '@/types/SurveyMetrics'
 import { CompanyWithSurveys } from '@/../../server/types/api'
 import { transformSurveyData } from '@/utils/transformData'
 import { useUser } from '@/use/useUser'
+import CompanySelector from '@/components/companySelector.vue'
 
 const { t } = useI18n()
 const { isLoadingSelectedCompanies, selectedCompaniesList, isLoadingSaveSelectedCompanies, saveRelevantCompanies } =
@@ -185,8 +186,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <v-toolbar>
-    <v-toolbar-title class="text-3xl font-bold">{{ t('selectRelevantCompanies') }}</v-toolbar-title>
+  <v-toolbar
+    color="surface"
+    elevation="1"
+    height="66"
+  >
+    <template #title>
+      <h2 class="text-h5 p-2 font-weight-bold">{{ t('selectRelevantCompanies') }}</h2>
+    </template>
   </v-toolbar>
 
   <v-row

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { computed, ComputedRef, onMounted, Ref, ref } from 'vue'
-import { getKpiAvgPerSurvey, calculateKpiStandardDeviations } from '@/utils/transformData'
+import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/utils/transformData'
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
-import { RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
+import { KPIData, RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
 import CompanySelector from '@/components/companySelector.vue'
 import { useUser } from '@/use/useUser'
 import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
@@ -23,6 +23,9 @@ const props = defineProps({
 const { t } = useI18n()
 const { selectedCompaniesRef, selectedCompany } = useUser()
 
+const savedShowSdtDev = localStorage.getItem('showStdDev')
+const showStdDev: Ref<boolean> = ref(savedShowSdtDev !== null ? JSON.parse(savedShowSdtDev) : false)
+
 const selectedCompanySurveysList = computed(() => {
   if (selectedCompany?.value.id === 'loading') return []
 
@@ -40,7 +43,7 @@ const relevantCompaniesWithSurveysList = computed(() => {
     : []
 })
 
-const calculateAvgKPIs = (surveysList: any[]) => {
+const calculateAvgKPIs = (surveysList: any[]): KPIData => {
   return surveysList.map((survey: any) => {
     const percentageOfFeedforwardsThatWereMarkedDiscussed =
       survey.totalFeedForwards > 0 ? (survey.feedForwardsMarkedDiscussed / survey.totalFeedForwards) * 100 : 0
@@ -82,27 +85,23 @@ const maxSurveys = computed(() => {
   return Math.max(...pickedKpisPerSurveyOfRelevantCompaniesList.value.map(companySurveys => companySurveys.length))
 })
 
+const showableSurveys = computed(() => {
+  return Math.min(maxSurveys.value, selectedCompanySurveysList.value.length + 5)
+})
+
 const filteredProcessDataList = computed(() => {
   if (!selectedCompanySurveysList.value.length) return []
 
-  /* avg over all surveys of selected company */
-  // if (selectedCompanySurveysList.value?.length)
-  //   console.log('selectedCompanySurveysList.value: ', selectedCompanySurveysList.value)
-
-  // console.log(
-  //   'pickedKpisPerSurveyOfRelevantCompaniesList: ',
-  //   JSON.stringify(pickedKpisPerSurveyOfRelevantCompaniesList.value, undefined, 2)
-  // )
+  const withStdDevPerSurveyList = calculateKpiStandardDeviationsPerSurvey(
+    relevantCompaniesWithSurveysList.value.map(company =>
+      JSON.parse(JSON.stringify(calculateAvgKPIs(company.surveysList)))
+    )
+  )
 
   const referenceKpisPerSurveyList: RelevantSurveyMetrics = getKpiAvgPerSurvey(
     pickedKpisPerSurveyOfRelevantCompaniesList.value
   )
 
-  // console.log('referenceKpisPerSurvey: ', referenceKpisPerSurvey, JSON.stringify(referenceKpisPerSurveyList, undefined, 2))
-
-  const withStandardDeviation = calculateKpiStandardDeviations(referenceKpisPerSurveyList)
-
-  // console.log('withStandardDeviation:', withStandardDeviation, JSON.stringify(withStandardDeviation, undefined, 2))
   const sortedSurveyData = []
   ;[...Array(maxSurveys.value)].forEach((_, surveyIndex) => {
     const survey = referenceKpisPerSurveyList[surveyIndex]
@@ -116,36 +115,63 @@ const filteredProcessDataList = computed(() => {
          * sortedSurveyData the index sorted. once for
          * the current company and once for the avg of all companies per survey */
         sortedSurveyData[index] = {
-          current: selectedCompanySurveysList.value.map(survey => survey[key] || 0),
-          companiesAvg: referenceKpisPerSurveyList.map((survey: any) => survey[key] || 0),
-          // stdDev: withStandardDeviation[key],
+          current: selectedCompanySurveysList.value.map(survey => survey[key] || 0).slice(0, showableSurveys.value),
+          companiesAvg: referenceKpisPerSurveyList
+            .map((survey: any) => survey[key] || 0)
+            .slice(0, showableSurveys.value),
+          stdDev: showStdDev.value ? withStdDevPerSurveyList[key]?.slice(0, showableSurveys.value) || [] : [],
         }
       }
     })
   })
-  // console.log('sortedSurveyData: ', sortedSurveyData)
 
   return sortedSurveyData
 })
 
 const labelsList = computed(() => {
-  return [...Array(maxSurveys.value)].map((_, index) => `Survey ${index + 1}`) || []
+  return [...Array(maxSurveys.value)].map((_, index) => `Survey ${index + 1}`).slice(0, showableSurveys.value) || []
 })
 
 const isMounted: Ref<boolean> = ref(false)
 onMounted(() => {
   isMounted.value = true
 })
+
+const isLoadingChart = ref(false)
+const onToggleStdDev = () => {
+  showStdDev.value = !showStdDev.value
+  localStorage.setItem('showStdDev', JSON.stringify(showStdDev.value))
+  isLoadingChart.value = true
+}
+
+const onUpdatedChart = () => {
+  isLoadingChart.value = false
+}
 </script>
 
 <template>
-  <v-toolbar>
-    <v-toolbar-title class="h-auto">
-      <div class="text-3xl font-bold flex">
-        {{ t('comparison', { companyName: selectedCompany?.name }) }}
-      </div>
-    </v-toolbar-title>
+  <v-toolbar
+    color="surface"
+    elevation="1"
+    height="66"
+  >
+    <template #title>
+      <h2 class="text-h5 p-2 font-weight-bold">{{ t('comparison', { companyName: selectedCompany?.name }) }}</h2>
+    </template>
     <v-toolbar-items>
+      <div class="flex justify-center items-center">
+        <v-btn
+          class="py-2"
+          variant="elevated"
+          color="outline"
+          size="large"
+          :loading="isLoadingChart"
+          :disabled="isLoadingChart"
+          @click="onToggleStdDev"
+        >
+          {{ showStdDev ? t('hide') : t('show') }} {{ t('stdDev') }}
+        </v-btn>
+      </div>
       <CompanySelector
         :companies="selectedCompaniesRef"
         v-model="selectedCompany"
@@ -182,7 +208,7 @@ onMounted(() => {
       <v-card
         v-for="(kpi, index) in filteredProcessDataList"
         :key="index"
-        class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
+        class="basis-[100%] sm:basis-[49%] md:basis-[49%] xl:basis-[31%] flex-grow"
         :class="{ 'v-card__loader--hidden': !isLoading }"
         :disabled="isLoading"
         :loading="isLoading"
@@ -192,7 +218,9 @@ onMounted(() => {
             :title="t(PROGRESS_KPI_SORTING_ORDER[index])"
             :data="kpi"
             :id="PROGRESS_KPI_SORTING_ORDER[index]"
+            :showStdDev="showStdDev"
             :labels="labelsList"
+            @update="onUpdatedChart"
           />
         </v-card-text>
       </v-card>

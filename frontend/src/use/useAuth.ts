@@ -3,6 +3,7 @@ import axios from 'axios'
 import { googleSdkLoaded } from 'vue3-google-login'
 import { useAuthStore } from '@/stores/authStore'
 import { LogoutResult, VerifyTokenResult } from '@/types/api'
+import { useUser } from './useUser'
 
 let accessToken: string | null = null
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID

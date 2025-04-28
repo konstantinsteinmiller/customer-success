@@ -51,3 +51,5 @@ export interface CompanyWithSurveys {
 export interface CompanyToSurveyMap {
   [key: string]: CompanyWithSurveys
 }
+
+export type VisitorsList = number[]

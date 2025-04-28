@@ -19,3 +19,27 @@ export interface RelevantSurveyMetrics {
 }
 
 export type SurveyKPI = (typeof DASHBOARD_KPI_SORTING_ORDER)[number]
+
+export interface KPIData {
+  avgQuestionsPerTeam: number
+  participants: number
+  participationRate: number
+  totalFeedForwards: number
+  feedForwardsPerRespondentPerQuestion: number
+  transparencyRate: number
+  feedForwardHandlingRate: number
+  tasksCreatedFromFeedForwards: number
+  closingRatePerSurvey: number
+  delegationRate: number
+  percentageOfFeedforwardsThatWereMarkedDiscussed: number
+  avgFeedForwardsPerQuestion: number
+}
+
+interface KPIStdDevResult {
+  [key: string]: {
+    mean: number
+    lowerBound: number
+    upperBound: number
+    count: number
+  }
+}

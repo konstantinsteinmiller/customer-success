@@ -41,6 +41,9 @@ export default {
         saveSelectedCompanies: 'Error while saving selected companies',
       },
     },
+    stdDev: 'Std. Dev.',
+    show: 'Show',
+    hide: 'Hide',
   },
   de: {
     open: 'öffnen',
@@ -76,5 +79,8 @@ export default {
     tasksCreatedFromFeedForwards: 'Tasks Created',
     closingRatePerSurvey: 'Closing Rate',
     delegationRate: 'Delegation Rate',
+    stdDev: 'Std. Dev.',
+    show: 'Zeige',
+    hide: 'Verstecke',
   },
 }

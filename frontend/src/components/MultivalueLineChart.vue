@@ -1,15 +1,27 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, Ref } from 'vue'
-import { Chart, Tooltip, LineController, LineElement, PointElement, LinearScale, CategoryScale, Legend } from 'chart.js'
-import Annotation from 'chartjs-plugin-annotation'
+import {
+  Chart,
+  Tooltip,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Legend,
+  Filler,
+} from 'chart.js'
 import { CHART_COLORS } from '@/config/constants'
 import { useI18n } from 'vue-i18n'
 import { deepCompare } from '@/utils/functions'
 import { isKpiPercentValue } from '@/utils/analytics'
+import { useAnalytics } from '@/use/useAnalytics'
 
-Chart.register(LineController, Tooltip, LineElement, PointElement, LinearScale, CategoryScale, Legend, Annotation)
+Chart.register(LineController, Tooltip, LineElement, PointElement, LinearScale, CategoryScale, Legend, Filler)
 
 const { t } = useI18n()
+const { isAnimatingMap } = useAnalytics()
+const emit = defineEmits(['update'])
 const props = defineProps({
   title: {
     type: String,
@@ -35,11 +47,16 @@ const props = defineProps({
     type: String,
     default: 'rgba(75, 192, 192, 0.2)',
   },
+  showStdDev: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const chartCanvas = ref(null)
+const chartCanvas = ref<HTMLCanvasElement | null>(null)
 const chartInstance: Ref<Chart | null> = ref(null)
 const isAnimating = ref(false) // Ref to track animation state
+isAnimatingMap[props.id] = true
 
 const chartData = {
   labels: props.labels,
@@ -60,59 +77,25 @@ const chartData = {
       data: [], // Will be populated from data
       tension: 0.3,
     },
+    {
+      label: t('upperbound'),
+      backgroundColor: `rgba(161, 255, 177, 0.66)`,
+      borderColor: CHART_COLORS.green,
+      borderWidth: 1,
+      data: [], // Will be populated from data
+      tension: 0.3,
+      fill: 3,
+    },
+    {
+      label: t('lowerbound'),
+      backgroundColor: `rgba(161, 255, 205, 0.66)`,
+      borderColor: CHART_COLORS.green,
+      borderWidth: 1,
+      data: [], // Will be populated from data
+      tension: 0.3,
+    },
   ],
 }
-
-const annotation1 = {
-  type: 'line',
-  borderColor: 'rgb(100, 149, 237)',
-  borderDash: [6, 6],
-  borderDashOffset: 0,
-  borderWidth: 3,
-  label: {
-    display: true,
-    backgroundColor: 'rgb(100, 149, 237)',
-    content: ctx => 'Average: ' + props.data.mean.toFixed(2),
-  },
-  scaleID: 'y',
-  value: ctx => props.data.mean,
-}
-// const annotation2 = {
-//   type: 'line',
-//   borderColor: 'rgba(102, 102, 102, 0.5)',
-//   borderDash: [6, 6],
-//   borderDashOffset: 0,
-//   borderWidth: 3,
-//   label: {
-//     display: true,
-//     backgroundColor: 'rgba(102, 102, 102, 0.5)',
-//     color: 'black',
-//     content: ctx => (average(ctx) + standardDeviation(ctx)).toFixed(2),
-//     position: 'start',
-//     rotation: -90,
-//     yAdjust: -28,
-//   },
-//   scaleID: 'y',
-//   value: ctx => average(ctx) + standardDeviation(ctx),
-// }
-// const annotation3 = {
-//   type: 'line',
-//   borderColor: 'rgba(102, 102, 102, 0.5)',
-//   borderDash: [6, 6],
-//   borderDashOffset: 0,
-//   borderWidth: 3,
-//   label: {
-//     display: true,
-//     backgroundColor: 'rgba(102, 102, 102, 0.5)',
-//     color: 'black',
-//     content: ctx => (average(ctx) - standardDeviation(ctx)).toFixed(2),
-//     position: 'end',
-//     rotation: 90,
-//     yAdjust: 28,
-//   },
-//   scaleID: 'y',
-//   value: ctx => average(ctx) - standardDeviation(ctx),
-// }
 
 const chartOptions = {
   responsive: true,
@@ -132,32 +115,6 @@ const chartOptions = {
     intersect: false,
   },
   plugins: {
-    annotation: {
-      annotations: props.data?.stdDev && [
-        {
-          type: 'box',
-          yMin: +props.data.stdDev.lowerBound.toFixed(2),
-          yMax: +props.data.stdDev.upperBound.toFixed(2),
-          borderColor: 'rgba(255, 201, 14, 0.7)',
-          backgroundColor: 'rgba(255, 201, 14, 0.1)',
-          borderWidth: 2,
-          label: {
-            content: `±${+props.data.stdDev.stdDev.toFixed(2)} Std Dev`,
-            display: true,
-            position: 'top',
-            font: {
-              size: 12,
-              color: 'rgba(255, 201, 14, 1)',
-            },
-          },
-        },
-      ],
-      // annotations: {
-      //   annotation1,
-      //   // annotation2,
-      //   // annotation3,
-      // },
-    },
     tooltip: {
       enabled: true,
       mode: 'index',
@@ -184,9 +141,11 @@ const chartOptions = {
   animation: {
     onProgress: () => {
       isAnimating.value = true
+      isAnimatingMap[props.id] = true
     },
     onComplete: () => {
       isAnimating.value = false
+      isAnimatingMap[props.id] = false
     },
   },
 }
@@ -196,8 +155,16 @@ const updateChart = () => {
 
   const data = props.data
   chartData.labels = props.labels
-  chartData.datasets[0].data = data?.current || []
-  chartData.datasets[1].data = data?.companiesAvg || []
+  chartData.datasets[0].data = data?.current.map(i => +i?.toFixed(2)) || []
+  chartData.datasets[1].data = data?.companiesAvg.map(i => +i?.toFixed(2)) || []
+  if (props.showStdDev && data?.stdDev) {
+    chartData.datasets[2].data = data?.stdDev?.map(i => i?.upperBound) || []
+    chartData.datasets[3].data = data?.stdDev?.map(i => i?.lowerBound) || []
+  } else {
+    chartData.datasets[2].data = []
+    chartData.datasets[3].data = []
+  }
+  emit('update')
 }
 
 watch(
@@ -233,7 +200,8 @@ watch(
         })
 
         chartInstance.value.destroy()
-        chartInstance.value = new Chart(chartCanvas.value?.getContext('2d'), {
+        chartInstance.value = new Chart(chartCanvas.value?.getContext('2d')!, {
+          // Use non-null assertion here
           type: 'line',
           data: chartData,
           options: chartOptions,
@@ -265,7 +233,7 @@ onUnmounted(() => chartInstance.value?.destroy())
 </script>
 
 <template>
-  <div class="h-64">
+  <div class="h-80">
     <canvas ref="chartCanvas"></canvas>
   </div>
 </template>

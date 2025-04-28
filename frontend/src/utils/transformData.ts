@@ -1,5 +1,6 @@
 import { SurveyMetrics } from '@/../../server/src/types/api'
 import { RelevantSurveyMetrics } from '@/types/SurveyMetrics'
+import { KPIData } from '../types/SurveyMetrics'
 
 export const transformSurveyData = (dataList: SurveyMetrics[]): RelevantSurveyMetrics => {
   const totalEntries = dataList.length
@@ -24,6 +25,31 @@ export const transformSurveyData = (dataList: SurveyMetrics[]): RelevantSurveyMe
     }
     return acc
   }, {})
+}
+
+export const addCalculatedKpis = (surveyList: SurveyMetrics[]) => {
+  const acc = {
+    avgFeedForwardsPerSurvey: 0,
+  }
+
+  const totalEntries = surveyList.length
+  surveyList.forEach((survey: SurveyMetrics, index: number) => {
+    Object.keys(survey).forEach((key: string) => {
+      const value = +survey[key]
+      if (acc[key] === undefined) acc[key] = 0
+      acc[key] += value
+
+      if (key === 'totalFeedForwards' && index === totalEntries - 1) {
+        acc['avgFeedForwardsPerSurvey'] = +(acc[key] / totalEntries).toFixed(2)
+      }
+    })
+  })
+
+  const enrichedSurveyList = surveyList.map((survey: SurveyMetrics) => {
+    survey['avgFeedForwardsPerSurvey'] = acc['avgFeedForwardsPerSurvey']
+    return survey
+  })
+  return enrichedSurveyList
 }
 
 export function getAllRelevantCompaniesAvgKPIs(relevantList: RelevantSurveyMetrics[]): RelevantSurveyMetrics {
@@ -186,4 +212,134 @@ export const calculateKpiStandardDeviations = (dataList: KpiData[]): KpiStandard
   })
 
   return kpiStandardDeviations
+}
+
+class KPIStdDevResult {}
+
+/**
+ * Calculates the mean, standard deviation, and bounds (mean +/- stdDev) for each KPI
+ * in the provided data.
+ *
+ * @param data An array of KPI data objects.
+ * @returns An object containing the calculated statistics for each KPI.
+ */
+const standardDeviation = (data: number[]): number => {
+  if (data.length <= 1) return 0
+
+  const mean = data.reduce((a, b) => a + b, 0) / data.length
+  const diffs = data.map(value => value - mean)
+  const squareDiffs = diffs.map(diff => diff * diff)
+  const avgSquareDiff = squareDiffs.reduce((a, b) => a + b, 0) / squareDiffs.length
+  return Math.sqrt(avgSquareDiff) || 0
+}
+
+/**
+ * Calculates the mean, standard deviation, and bounds (mean +/- stdDev) for each KPI,
+ * calculated separately for each survey ID across all companies.  Handles cases where
+ * companies have different numbers of surveys.
+ *
+ * @param companiesListWithSurveysList An array of companies, each company containing a list of surveys with KPI data objects.
+ * @returns An object containing the calculated statistics for each KPI and survey ID.
+ */
+export const calculateKpiStandardDeviationsPerSurvey = (companiesListWithSurveysList: KPIData[]): KPIStdDevResult => {
+  /* find first company with an survey */
+  companiesListWithSurveysList = companiesListWithSurveysList.filter(surveys => surveys.length)
+  const referenceSurvey = companiesListWithSurveysList[0][0]
+  if (!referenceSurvey) return {}
+
+  const kpiKeys = Object.keys(referenceSurvey)?.filter(key => typeof referenceSurvey?.[key] === 'number')
+  const result: KPIStdDevResult = {}
+
+  // 1. Group data by surveyId
+  const surveys: { [surveyId: number]: KPIData[] } = {}
+  companiesListWithSurveysList.forEach((company: any) => {
+    company.forEach((survey: KPIData, index: number) => {
+      const surveyId = index + 1 // Use the surveyId from the data item
+      if (!surveys[surveyId]) {
+        surveys[surveyId] = []
+      }
+      surveys[surveyId].push(survey)
+    })
+  })
+
+  // 2. Calculate statistics for each KPI and surveyId
+  kpiKeys.forEach(kpi => {
+    result[kpi] = {}
+    Object.keys(surveys).forEach(surveyIdKey => {
+      const surveyId = parseInt(surveyIdKey, 10)
+      const surveyData = surveys[surveyId]
+      const values = surveyData.map(item => item[kpi])
+      const mean = values.reduce((a, b) => a + b, 0) / values.length
+      const stdDev = standardDeviation(values)
+      const lowerBound = mean - stdDev
+      const upperBound = mean + stdDev
+      const count = values.length
+
+      result[kpi][surveyId] = {
+        mean: +mean.toFixed(2),
+        lowerBound: +lowerBound.toFixed(2),
+        upperBound: +upperBound.toFixed(2),
+        count: count,
+      }
+    })
+
+    result[kpi] = Object.values(result[kpi])
+  })
+
+  return result
+}
+
+export const calculateKpiStandardDeviationsPerCompany = (dataList: KPIData[]): KPIStdDevResult => {
+  if (!dataList.length) return {}
+
+  const firstSurvey = dataList[0]
+  const kpiKeys = Object.keys(firstSurvey).filter(key => typeof firstSurvey[key] === 'number')
+  const result: KPIStdDevResult = {}
+
+  kpiKeys.forEach(kpi => {
+    const values = dataList.map((item: any) => item[kpi])
+    const mean = values.reduce((a, b) => a + b, 0) / values.length
+    const stdDev = standardDeviation(values)
+    const lowerBound = mean - stdDev
+    const upperBound = mean + stdDev
+
+    result[kpi] = {
+      mean: mean,
+      lowerBound: lowerBound,
+      upperBound: upperBound,
+    }
+  })
+
+  return result
+}
+
+export const getStdAvgOverCompanies = (withStdDevPerSurveyList: any[]) => {
+  return withStdDevPerSurveyList.reduce((acc: any, companyStds: KPIData, index: number) => {
+    const kpis = Object.keys(companyStds)
+
+    kpis.forEach((kpi: string) => {
+      const kpiValue = companyStds[kpi]
+      if (acc[kpi] === undefined) {
+        acc[kpi] = {
+          mean: 0,
+          upperBound: 0,
+          lowerBound: 0,
+        }
+      }
+
+      Object.keys(acc[kpi]).forEach((stdKey: string) => {
+        acc[kpi][stdKey] += kpiValue[stdKey]
+      })
+    })
+
+    /* calc average*/
+    if (index === withStdDevPerSurveyList.length - 1 && withStdDevPerSurveyList.length >= 2) {
+      kpis.forEach((kpi: string) => {
+        Object.keys(acc[kpi]).forEach((stdKey: string) => {
+          acc[kpi][stdKey] = +(acc[kpi][stdKey] / withStdDevPerSurveyList.length).toFixed(2)
+        })
+      })
+    }
+    return acc
+  }, {})
 }

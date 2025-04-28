@@ -18,7 +18,7 @@ const onDateChange = (range: DateRange) => fetchData(range)
 const fetchData = async (range: DateRange) => {
   isLoading.value = true
   try {
-    const [visitorsResult] = await Promise.all([getVisitorData(range)])
+    const visitorsResult = await getVisitorData(range)
     labelsList.value = [...Array(visitorsResult.length).keys()].map(day => day + 1 + '')
     visitorsDataList.value = visitorsResult
   } catch (e) {
@@ -34,11 +34,15 @@ const totalVisitors = computed(() => {
 </script>
 
 <template>
-  <div class="py-4" />
-  <v-toolbar class="">
-    <v-toolbar-title class="h-auto">
-      <div class="text-3xl font-bold flex">{{ t('visitors') }}</div>
-    </v-toolbar-title>
+  <v-toolbar
+    class="mb-4"
+    color="surface"
+    elevation="1"
+    height="66"
+  >
+    <template #title>
+      <h2 class="text-h5 p-2 font-weight-bold">{{ t('title') }}</h2>
+    </template>
   </v-toolbar>
 
   <v-card
@@ -96,9 +100,11 @@ const totalVisitors = computed(() => {
 en:
   yesRemove: "Yes Remove"
   cancel: "Cancel"
-  visitors: "Webpage Analytics"
+  title: "Webpage Analytics"
+  visitors: "Visitors"
 de:
   yesRemove: "Ja, entfernen"
   cancel: "Abbrechen"
-  visitors: "Webseite Analytics"
+  title: "Webseite Analytics"
+  visitors: "Webseite Besucher"
 </i18n>

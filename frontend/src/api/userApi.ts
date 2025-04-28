@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { Company } from '@/../../server/src/types/api'
 
-export const fetchSelectedCompanies = async () => {
+export const fetchUser = async () => {
   try {
-    const response = await axios.get('/users/companies', {})
+    const response = await axios.get('/user', {})
     return response.data
   } catch (error: unknown) {
     console.error('Unable to fetch selected companies:', error)

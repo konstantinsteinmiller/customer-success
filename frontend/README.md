@@ -42,3 +42,7 @@ But it's still recommended to test the production build with `test:e2e` before d
 pnpm build
 pnpm test:e2e
 ```
+# Preview
+![bar charts kpi comparison](https://bitbucket.org/joineer-ag/customer-success/src/develop/frontend/src/assets/documentation/bar-charts-kpi-comparison.png)
+
+![progress-charts.png](https://bitbucket.org/joineer-ag/customer-success/src/develop/frontend/src/assets/documentation/progress-charts.png)

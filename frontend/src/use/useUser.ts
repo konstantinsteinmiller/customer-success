@@ -1,4 +1,4 @@
-import { postSelectedCompanies, fetchSelectedCompanies } from '@/api/userApi'
+import { postSelectedCompanies, fetchUser } from '@/api/userApi'
 import { computed, ComputedRef, ref, Ref, watch } from 'vue'
 import { CompanyToSurveyMap, Company } from '@/../../server/src/types/api'
 import useToast from '@/use/useToast'
@@ -10,6 +10,7 @@ const { addToast } = useToast()
 const selectedCompaniesList: Ref<Company[]> = ref<Company[]>([])
 const isLoadingSelectedCompanies = ref(false)
 const isLoadingSaveSelectedCompanies = ref(false)
+const userProfile: Ref<any> = ref({})
 
 interface CompaniesListResult {
   data: Company[]
@@ -40,11 +41,21 @@ export const useUser = () => {
     return selectedCompaniesRef.value?.length
   })
 
-  const getSelectedCompanies = async (): CompanyToSurveyMap | Partial<CompanyToSurveyMap> => {
+  const getUser = async (): CompanyToSurveyMap | Partial<CompanyToSurveyMap> => {
     isLoadingSelectedCompanies.value = true
     try {
-      const result: CompaniesListResult = await fetchSelectedCompanies()
-      selectedCompaniesList.value = result.data
+      const result: {
+        data: {
+          id: string
+          name: string
+          picture: string
+          companiesList: Company[]
+        }
+      } = await fetchUser()
+
+      selectedCompaniesList.value = result?.data?.companiesList
+      userProfile.value = result?.data
+
       return result.data
     } catch (error: any) {
       selectedCompaniesList.value = []
@@ -59,7 +70,7 @@ export const useUser = () => {
     isLoadingSaveSelectedCompanies.value = true
     try {
       const result: any = await postSelectedCompanies(selectedCompaniesList)
-
+      getUser()
       addToast(t('useUser.success.saveSelectedCompanies'), 'success')
       return result.data
     } catch (error: any) {
@@ -73,7 +84,7 @@ export const useUser = () => {
   }
 
   return {
-    getSelectedCompanies,
+    getUser,
     saveRelevantCompanies,
     selectedCompaniesList,
     isLoadingSaveSelectedCompanies,
@@ -81,5 +92,6 @@ export const useUser = () => {
     selectedCompaniesRef,
     selectedCompany,
     totalCompanies,
+    userProfile,
   }
 }
