@@ -35,10 +35,12 @@ const fetchData = async () => {
 </script>
 
 <template>
-  <ProcessDataDashboard
-    :data="companiesToSurveyMap"
-    :isLoading="isLoading"
-  />
+  <div class="pdf-screen-target pb-8">
+    <ProcessDataDashboard
+      :data="companiesToSurveyMap"
+      :isLoading="isLoading"
+    />
+  </div>
 
   <v-card
     class="visitor-card"

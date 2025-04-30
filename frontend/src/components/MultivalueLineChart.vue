@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, Ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, Ref, useTemplateRef } from 'vue'
 import {
   Chart,
   Tooltip,
@@ -16,6 +16,7 @@ import { useI18n } from 'vue-i18n'
 import { deepCompare } from '@/utils/functions'
 import { isKpiPercentValue } from '@/utils/analytics'
 import { useAnalytics } from '@/use/useAnalytics'
+import { useRoute } from 'vue-router'
 
 Chart.register(LineController, Tooltip, LineElement, PointElement, LinearScale, CategoryScale, Legend, Filler)
 
@@ -53,7 +54,7 @@ const props = defineProps({
   },
 })
 
-const chartCanvas = ref<HTMLCanvasElement | null>(null)
+const chartCanvas = useTemplateRef<HTMLCanvasElement | null>('chartCanvas')
 const chartInstance: Ref<Chart | null> = ref(null)
 const isAnimating = ref(false) // Ref to track animation state
 isAnimatingMap[props.id] = true
@@ -106,7 +107,7 @@ const chartOptions = {
       grace: '10%',
       title: {
         display: true,
-        text: props.title,
+        text: '',
       },
     },
   },
@@ -182,9 +183,9 @@ watch(
       }
     })
     if (hasDataChanged && chartInstance.value) {
-      updateChart()
-
       try {
+        updateChart()
+
         /* fix weird animation and chart destroy race condition
          * wait for the animation to finish before continuing to
          * destroy the chart to prevent chart.js error that breaks rendering */
@@ -214,6 +215,13 @@ watch(
   { deep: true }
 )
 
+const setupChartInstance = ctx => {
+  chartInstance.value = new Chart(ctx, {
+    type: 'line',
+    data: chartData,
+    options: chartOptions,
+  })
+}
 onMounted(() => {
   const ctx = chartCanvas.value?.getContext('2d')
 
@@ -221,18 +229,39 @@ onMounted(() => {
   updateChart()
 
   if (ctx) {
-    chartInstance.value = new Chart(ctx, {
-      type: 'line',
-      data: chartData,
-      options: chartOptions,
-    })
+    setupChartInstance(ctx)
   }
 })
 
-onUnmounted(() => chartInstance.value?.destroy())
+onBeforeUnmount(async () => {
+  /* await animation of the created instance before attempting destruction */
+  await new Promise(async resolve => {
+    if (isAnimating.value) {
+      const interval = setInterval(() => {
+        if (!isAnimating.value) {
+          clearInterval(interval)
+          resolve(true)
+        }
+      }, 300)
+    }
+  })
+  chartInstance.value?.destroy()
+  chartInstance.value = null //prevent other errors
+})
+const route = useRoute()
 </script>
 
 <template>
+  <div class="pb-2">
+    <v-card-title
+      class="!inline text-wrap word-wrap !text-[1.25rem] px-0 py-0 !leading-[1.25rem]"
+      :class="{
+        'kpi-title--gradient': route.query.cool,
+        'kpi-title--gradient-diagonal': route.query.cool === 'diagonal',
+      }"
+      >{{ t(props.id) }}</v-card-title
+    >
+  </div>
   <div class="h-80">
     <canvas ref="chartCanvas"></canvas>
   </div>

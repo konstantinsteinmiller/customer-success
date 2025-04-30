@@ -18,8 +18,11 @@
 - [x] progress chart runden
 - [ ] Widget drag and drop or select widget order list
 - [x] tail cut 5 last survey in progress chart
-- [ ] be able to print to PDF or similar to allow to forward the view of a clients' data to them https://majidzeno.hashnode.dev/effortless-pdf-generation-in-vue
+- [x] update kpi stddev to t shape
+- [x] be able to print to PDF or similar to allow to forward the view of a clients' data to them https://majidzeno.hashnode.dev/effortless-pdf-generation-in-vue
 - [ ] be able to select a different view with the development over time (half-year intervals) -> see draft
 - [ ] https://joineer.slack.com/archives/C01CV1D3464/p1743603999532109
+- [ ] fix getUser after login to have correct intial chart load
+- [ ] fix overlap header with stddev button
 
  

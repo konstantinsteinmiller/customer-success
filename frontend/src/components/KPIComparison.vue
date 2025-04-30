@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, Ref, ref, watch } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { useI18n } from 'vue-i18n'
 import { CHART_COLORS } from '@/config/constants'
@@ -31,7 +31,7 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['update', 'finished-animation'])
+const emit = defineEmits(['update'])
 
 const route = useRoute()
 const { t } = useI18n()
@@ -113,32 +113,78 @@ const chartOptions = {
 }
 
 const updateChartAnnotations = () => {
-  const annotations: any[] = []
-  const kpiWithoutStdDevList = ['totalCompanies', 'avgFeedForwardsPerSurvey']
-  if (props.showStdDev && props.kpi?.stdDev && !kpiWithoutStdDevList.includes(props.id)) {
-    annotations.push(
-      {
-        type: 'line',
-        id: 'meanLine',
-        borderColor: 'rgb(100, 149, 237)',
-        borderDash: [6, 6],
-        borderDashOffset: 0,
-        borderWidth: 3,
-        label: {
-          display: true,
-          backgroundColor: 'rgb(100, 149, 237)',
-          content: () => 'Average: ' + +props.kpi.stdDev.mean.toFixed(1),
+  try {
+    const annotations: any[] = []
+    const kpiWithoutStdDevList = ['totalCompanies', 'avgFeedForwardsPerSurvey']
+    if (props.showStdDev && props.kpi?.stdDev && !kpiWithoutStdDevList.includes(props.id)) {
+      const lowerBound = props.kpi?.stdDev.lowerBound
+      const upperBound = props.kpi?.stdDev.upperBound
+      const stdColor = 'rgb(255,0,38)'
+
+      annotations.push(
+        {
+          type: 'line',
+          xScaleID: 'x',
+          yScaleID: 'y',
+          xMin: 0.2, // Use the same label, but adjust x position
+          xMax: 0.2, // Use the same label, but adjust x position
+          yMin: lowerBound,
+          yMax: upperBound,
+          // borderDash: [5, 5],
+          borderColor: stdColor,
+          borderWidth: 1,
         },
-        scaleID: 'y',
-        value: () => +props.kpi.stdDev.mean.toFixed(1),
-      },
+        {
+          type: 'line',
+          xScaleID: 'x',
+          yScaleID: 'y',
+          xMin: 0.02, // Use the same label, but adjust x position
+          xMax: 0.38, // Use the same label, but adjust x position
+          yMin: lowerBound,
+          yMax: lowerBound,
+          borderColor: stdColor,
+          borderWidth: 1,
+          // borderDash: [5, 5], // Optional: Add a dash for the lower bound
+          label: { enabled: false },
+        },
+        {
+          type: 'line',
+          xScaleID: 'x',
+          yScaleID: 'y',
+          xMin: 0.02, // Use the same label, but adjust x position
+          xMax: 0.38, // Use the same label, but adjust x position
+          yMin: upperBound,
+          yMax: upperBound,
+          borderColor: stdColor,
+          borderWidth: 1,
+          label: { enabled: false },
+        }
+      )
+      // })
+
+      /*annotations.push(
+      // {
+      //   type: 'line',
+      //   id: 'meanLine',
+      //   borderColor: 'rgb(100, 149, 237)',
+      //   borderDash: [6, 6],
+      //   borderDashOffset: 0,
+      //   borderWidth: 1,
+      //   label: {
+      //     display: true,
+      //     backgroundColor: 'rgb(100, 149, 237)',
+      //     content: () => 'Average: ' + +props.kpi.stdDev.mean.toFixed(1),
+      //   },
+      //   scaleID: 'y',
+      //   value: () => +props.kpi.stdDev.mean.toFixed(1),
+      // },
       {
         type: 'line',
         id: 'upperBoundLine',
         borderColor: 'rgba(102, 102, 102, 0.5)',
         borderDash: [6, 6],
         borderDashOffset: 0,
-        borderWidth: 3,
+        borderWidth: 1,
         label: {
           display: true,
           backgroundColor: 'rgba(102, 102, 102, 0.5)',
@@ -155,7 +201,11 @@ const updateChartAnnotations = () => {
         borderColor: 'rgba(102, 102, 102, 0.5)',
         borderDash: [6, 6],
         borderDashOffset: 0,
-        borderWidth: 3,
+        xMin: 1,
+        xMax: 2,
+        yMin: 1,
+        yMax: 52,
+        borderWidth: 1,
         label: {
           display: true,
           backgroundColor: 'rgba(102, 102, 102, 0.5)',
@@ -166,11 +216,14 @@ const updateChartAnnotations = () => {
         scaleID: 'y',
         value: () => +props.kpi.stdDev.lowerBound.toFixed(1),
       }
-    )
-  }
-  chartOptions.plugins.annotation.annotations = annotations
-  if (chartInstance.value) {
-    chartInstance.value.options.plugins.annotation.annotations = annotations
+    )*/
+    }
+    chartOptions.plugins.annotation.annotations = annotations
+    if (chartInstance.value) {
+      chartInstance.value.options.plugins.annotation.annotations = annotations
+    }
+  } catch (error) {
+    console.log('error: ', error)
   }
 }
 
@@ -246,6 +299,21 @@ onMounted(() => {
       options: chartOptions,
     })
   }
+})
+
+onBeforeUnmount(async () => {
+  await new Promise(async resolve => {
+    if (isAnimating.value) {
+      const interval = setInterval(() => {
+        if (!isAnimating.value) {
+          clearInterval(interval)
+          resolve(true)
+        }
+      }, 300)
+    }
+  })
+  chartInstance.value?.destroy()
+  chartInstance.value = null //prevent other errors
 })
 </script>
 

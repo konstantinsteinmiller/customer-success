@@ -149,6 +149,7 @@ const onUpdatedChart = () => {
     color="surface"
     elevation="1"
     height="66"
+    class=""
   >
     <template #title>
       <h2 class="text-h5 p-2 font-weight-bold">{{ t('customerSuccess', { companyName: selectedCompany?.name }) }}</h2>
@@ -175,7 +176,7 @@ const onUpdatedChart = () => {
   </v-toolbar>
 
   <v-row
-    class="px-3 py-6 mb-6 gap-4 justify-between"
+    class="px-3 pt-6 gap-4 justify-between"
     v-if="filteredProcessDataList.length"
   >
     <v-card

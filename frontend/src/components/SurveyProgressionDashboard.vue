@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ComputedRef, onMounted, Ref, ref } from 'vue'
+import { computed, ComputedRef, onMounted, Ref, ref, useTemplateRef } from 'vue'
 import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/utils/transformData'
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
@@ -8,6 +8,7 @@ import { KPIData, RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics
 import CompanySelector from '@/components/companySelector.vue'
 import { useUser } from '@/use/useUser'
 import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
+import draggable from 'vuedraggable'
 
 const props = defineProps({
   data: {
@@ -147,6 +148,10 @@ const onToggleStdDev = () => {
 const onUpdatedChart = () => {
   isLoadingChart.value = false
 }
+
+// const $dragDontainer = useTemplateRef<HTMLElement | null>('drag-container')
+// dragula([$dragDontainer])
+const drag = ref(false)
 </script>
 
 <template>
@@ -180,7 +185,7 @@ const onUpdatedChart = () => {
   </v-toolbar>
 
   <v-row
-    class="px-3 py-6 mb-6 gap-4 min-h-64 justify-between"
+    class="container px-3 pt-6 gap-4 min-h-64 justify-between"
     v-if="filteredProcessDataList.length && isMounted"
   >
     <v-card

@@ -6,6 +6,7 @@ import { googleSdkLoaded } from 'vue3-google-login'
 import axios from 'axios'
 import { useAuth } from '@/use/useAuth.js'
 import { useAuthStore } from '@/stores/authStore.ts'
+import { useUser } from '@/use/useUser'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -15,10 +16,12 @@ const auth = useAuth()
 const loading = ref(false)
 
 const authStore = useAuthStore()
+const { getUser } = useUser()
 watch(
   () => authStore.isAuthenticated,
-  isAuthenticated => {
+  async isAuthenticated => {
     if (isAuthenticated) {
+      await getUser()
       router.push({
         name: 'customer-success',
         query: {

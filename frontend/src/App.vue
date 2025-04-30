@@ -3,9 +3,10 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@/use/useAuth.js'
 import ToastManager from '@/components/molecules/ToastManager.vue'
 import { useI18n } from 'vue-i18n'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, Ref, ref, shallowRef, watch } from 'vue'
 import { useUser } from '@/use/useUser'
 import { useAnalytics } from '@/use/useAnalytics'
+import { generatePdf } from '@/utils/pdf'
 
 const auth = useAuth()
 const router = useRouter()
@@ -57,11 +58,26 @@ const userItems = ref([
   },
 ])
 
-const { userProfile, getUser } = useUser()
+const { userProfile, getUser, selectedCompany } = useUser()
 const route = useRoute()
+const hasScrolledToBottomOfWindow: Ref<boolean> = ref(false)
+
+const printableRoutesList = ['customer-success', 'progression']
+const onScrollPage = () => {
+  hasScrolledToBottomOfWindow.value = printableRoutesList.includes(route.name as string)
+    ? window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight
+    : false
+}
 onMounted(async () => {
+  document.addEventListener('scroll', onScrollPage)
+
   await getUser()
 })
+
+onUnmounted(() => {
+  document.removeEventListener('scroll', onScrollPage)
+})
+
 watch(
   () => route,
   () => {
@@ -85,6 +101,13 @@ const onNavButton = async (item: any) => {
       }, 500)
     }
   }, 100)
+}
+
+const open = shallowRef(false)
+const onPrintClick = () => {
+  const isoDate = new Date().toISOString().split('T')[0]
+  const companyName = selectedCompany.value?.name.toLowerCase()?.split(' ').join('-')
+  generatePdf(`${route.name as string}-${companyName}-${isoDate}.pdf`, '.pdf-screen-target')
 }
 </script>
 
@@ -134,19 +157,36 @@ const onNavButton = async (item: any) => {
                 v-for="(item, i) in userItems"
                 :key="i"
                 link
-                :title="item.text"
-                v-bind="item"
                 @click="item.action"
-              />
+              >
+                <template #prepend><v-icon :icon="item.icon" /></template>
+                <v-list-item-title>{{ item.text }}</v-list-item-title>
+              </v-list-item>
             </v-list>
           </v-menu>
         </v-btn>
       </template>
     </v-app-bar>
 
+    <!--    <div class="pdf-screen-target">-->
     <v-main style="--v-layout-top: 48px">
       <RouterView />
     </v-main>
+    <!--    </div>-->
+
+    <v-fab
+      v-show="hasScrolledToBottomOfWindow"
+      :key="'print-pdf-position'"
+      :absolute="false"
+      :app="true"
+      :color="'primary'"
+      :location="'bottom right'"
+      size="large"
+      icon
+      @click="onPrintClick"
+    >
+      <v-icon>{{ open ? 'mdi-close' : 'mdi-file-pdf-box' }}</v-icon>
+    </v-fab>
     <ToastManager />
   </v-layout>
 </template>
@@ -163,6 +203,16 @@ const onNavButton = async (item: any) => {
   &.v-card__loader--hidden :deep(.v-card__loader)
     display: none
     z-index: -1
+
+main
+  padding: 0
+
+.v-card.v-card--print-pdf, .pdf-screen-target.pdf-screen-target--print-pdf div.v-toolbar__content
+  background-color: rgba(246, 246, 246, 0.89) !important
+
+.pdf-screen-target--print-pdf
+  padding: 0rem 4rem 3.5rem 4rem
+  width: calc(100% + 8rem)
 </style>
 
 <i18n>

@@ -34,10 +34,12 @@ fetchData()
 </script>
 
 <template>
-  <SurveyProgressionDashboard
-    :data="companiesToSurveyMap"
-    :isLoading="isLoading"
-  />
+  <div class="pdf-screen-target pb-8">
+    <SurveyProgressionDashboard
+      :data="companiesToSurveyMap"
+      :isLoading="isLoading"
+    />
+  </div>
 </template>
 
 <style lang="sass" scoped>
