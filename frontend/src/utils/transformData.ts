@@ -313,7 +313,7 @@ export const calculateKpiStandardDeviationsPerCompany = (dataList: KPIData[]): K
   return result
 }
 
-export const getStdAvgOverCompanies = (withStdDevPerSurveyList: any[]) => {
+export const getStdAvgOverCompanies = (withStdDevPerSurveyList: any[], avgFeedForwardsPerSurveyList: any[]) => {
   return withStdDevPerSurveyList.reduce((acc: any, companyStds: KPIData, index: number) => {
     const kpis = Object.keys(companyStds)
 
@@ -339,6 +339,18 @@ export const getStdAvgOverCompanies = (withStdDevPerSurveyList: any[]) => {
           acc[kpi][stdKey] = +(acc[kpi][stdKey] / withStdDevPerSurveyList.length).toFixed(2)
         })
       })
+
+      /* calc avgFeedForwardsPerSurvey */
+      const mean = avgFeedForwardsPerSurveyList.reduce((a, b) => a + b, 0) / avgFeedForwardsPerSurveyList.length
+      const stdDev = standardDeviation(avgFeedForwardsPerSurveyList)
+      const lowerBound = mean - stdDev
+      const upperBound = mean + stdDev
+
+      acc['avgFeedForwardsPerSurvey'] = {
+        mean: +mean.toFixed(2),
+        lowerBound: +lowerBound.toFixed(2),
+        upperBound: +upperBound.toFixed(2),
+      }
     }
     return acc
   }, {})

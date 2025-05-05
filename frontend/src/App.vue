@@ -119,13 +119,13 @@ const onPrintClick = () => {
       flat
     >
       <img
-        class="min-w-16 w-32 mr-4"
+        class="min-w-16 w-32 mr-4 px-2 sm:px-16 md:px-0"
         src="/images/joineer.png"
         alt="joineer-log"
         style="filter: drop-shadow(2px 2px 4px rgba(255, 255, 255, 0.7))"
       />
 
-      <template v-if="$vuetify.display.mdAndUp">
+      <template v-if="$vuetify.display.smAndUp">
         <v-btn
           v-for="(item, i) in menuItems"
           :key="i"
@@ -211,8 +211,9 @@ main
   background-color: rgba(246, 246, 246, 0.89) !important
 
 .pdf-screen-target--print-pdf
-  padding: 0rem 4rem 3.5rem 4rem
+  padding: 3.5rem 4rem 2.5rem 4rem
   width: calc(100% + 8rem)
+  height: calc(100% + 6rem)
 </style>
 
 <i18n>

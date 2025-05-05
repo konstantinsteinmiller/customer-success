@@ -44,6 +44,7 @@ export default {
     stdDev: 'Std. Dev.',
     show: 'Show',
     hide: 'Hide',
+    loading: 'Loading...',
   },
   de: {
     open: 'öffnen',
@@ -82,5 +83,6 @@ export default {
     stdDev: 'Std. Dev.',
     show: 'Zeige',
     hide: 'Verstecke',
+    loading: 'Lade...',
   },
 }

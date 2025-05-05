@@ -12,8 +12,10 @@ import { pick } from 'lodash'
 import { DASHBOARD_KPI_SORTING_ORDER } from '@/config/constants'
 import { RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
 import KPIComparison from '@/components/KPIComparison.vue'
-import CompanySelector from '@/components/companySelector.vue'
 import { useUser } from '@/use/useUser'
+import draggable from 'vuedraggable'
+import { useWidgetOrder } from '@/use/useWidgetOrder'
+import DashboardHeader from '@/components/molecules/DashboardHeader.vue'
 
 const props = defineProps({
   data: {
@@ -31,6 +33,7 @@ const { selectedCompaniesRef, selectedCompany, totalCompanies } = useUser()
 
 const savedShowSdtDev = localStorage.getItem('showStdDev')
 const showStdDev: Ref<boolean> = ref(savedShowSdtDev !== null ? JSON.parse(savedShowSdtDev) : false)
+const avgFeedForwardsPerSurveyList = ref([])
 
 const selectedCompanySurveysList = computed(() => {
   const surveyList = props.data?.[selectedCompany.value.id]?.surveysList
@@ -80,6 +83,7 @@ const calculateAvgKPIs = (surveysList: any[]) => {
       totalCompanies: totalCompanies.value,
       percentageOfFeedforwardsThatWereMarkedDiscussed,
       avgFeedForwardsPerQuestion,
+      id: `${survey.id}-${Math.random()}`,
     }
   })
 }
@@ -96,7 +100,9 @@ const filteredProcessDataList = computed(() => {
   const summedRelevantCompaniesProcessDataList: RelevantSurveyMetrics[] = relevantCompaniesWithSurveysList.value.map(
     (company: any) => {
       const companySurveysList = calculateAvgKPIs(company.surveysList)
-      return transformSurveyData(companySurveysList)
+      const transformedSurveyKpiData = transformSurveyData(companySurveysList)
+      avgFeedForwardsPerSurveyList.value.push(transformedSurveyKpiData['avgFeedForwardsPerSurvey'])
+      return transformedSurveyKpiData
     }
   )
 
@@ -107,10 +113,12 @@ const filteredProcessDataList = computed(() => {
   const withStdDevPerSurveyList = pickedKpisPerSurveyOfRelevantCompaniesList.value.map(surveyList => {
     let data = calculateAvgKPIs(surveyList)
     data = addCalculatedKpis(data)
-    // console.log('data: ', data)
     return calculateKpiStandardDeviationsPerCompany(JSON.parse(JSON.stringify(data)))
   })
-  const withStdDevPerSurveyCompanyAvg = getStdAvgOverCompanies(withStdDevPerSurveyList)
+  const withStdDevPerSurveyCompanyAvg = getStdAvgOverCompanies(
+    withStdDevPerSurveyList,
+    avgFeedForwardsPerSurveyList.value
+  )
 
   const sortedSummedProcessData = []
   Object.keys(summedProcessData).forEach((key: SurveyKPI) => {
@@ -122,9 +130,10 @@ const filteredProcessDataList = computed(() => {
        * the current company and once for the avg over all companies */
 
       sortedSummedProcessData[index] = {
-        current: +summedProcessData[key] /*?.toFixed(2)*/,
-        companiesAvg: +referenceProcessMetrics[key] /*?.toFixed(2)*/,
+        current: +summedProcessData[key],
+        companiesAvg: +referenceProcessMetrics[key],
         stdDev: showStdDev.value ? withStdDevPerSurveyCompanyAvg[key] : [],
+        id: key,
       }
     }
   })
@@ -142,60 +151,50 @@ const onToggleStdDev = () => {
 const onUpdatedChart = () => {
   isLoadingChart.value = false
 }
+
+const drag = ref(false)
+const { widgetsList } = useWidgetOrder(filteredProcessDataList, 'barChartsWidgetsSortingOrder')
 </script>
 
 <template>
-  <v-toolbar
-    color="surface"
-    elevation="1"
-    height="66"
-    class=""
-  >
-    <template #title>
-      <h2 class="text-h5 p-2 font-weight-bold">{{ t('customerSuccess', { companyName: selectedCompany?.name }) }}</h2>
-    </template>
-    <v-toolbar-items>
-      <div class="flex justify-center items-center">
-        <v-btn
-          class="py-2"
-          variant="elevated"
-          color="outline"
-          size="large"
-          :loading="isLoadingChart"
-          :disabled="isLoadingChart"
-          @click="onToggleStdDev"
-        >
-          {{ showStdDev ? t('hide') : t('show') }} {{ t('stdDev') }}
-        </v-btn>
-      </div>
-      <CompanySelector
-        :companies="selectedCompaniesRef"
-        v-model="selectedCompany"
-      />
-    </v-toolbar-items>
-  </v-toolbar>
+  <DashboardHeader
+    title="customerSuccess"
+    :isLoadingChart="isLoadingChart"
+    :showStdDev="showStdDev"
+    :onToggleStdDev="onToggleStdDev"
+  />
 
   <v-row
-    class="px-3 pt-6 gap-4 justify-between"
+    class="px-3 pt-6 gap-4 min-h-64 justify-between"
     v-if="filteredProcessDataList.length"
   >
-    <v-card
-      v-for="(kpi, index) in filteredProcessDataList"
-      :key="`${kpi.current}-${index}-${kpi.companiesAvg}`"
-      class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
-      :class="{ 'v-card__loader--hidden': !isLoading }"
-      :disabled="isLoading"
-      :loading="isLoading"
+    <draggable
+      v-model="widgetsList"
+      group="kpis"
+      @start="drag = true"
+      @end="drag = false"
+      item-key="id"
+      class="flex flex-wrap gap-4 w-full"
     >
-      <v-card-text>
-        <KPIComparison
-          :kpi="kpi"
-          :id="DASHBOARD_KPI_SORTING_ORDER[index]"
-          :showStdDev="showStdDev"
-          @update="onUpdatedChart"
-        />
-      </v-card-text>
-    </v-card>
+      <template #item="{ element }">
+        <v-card
+          :key="element.id"
+          class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
+          :class="{ 'v-card__loader--hidden': !isLoading }"
+          :disabled="isLoading"
+          :loading="isLoading"
+        >
+          <v-card-text>
+            <KPIComparison
+              :kpi="element"
+              :id="element.id"
+              :showStdDev="showStdDev"
+              @update="onUpdatedChart"
+            />
+          </v-card-text>
+        </v-card>
+      </template>
+    </draggable>
   </v-row>
 </template>
 
@@ -211,12 +210,3 @@ const onUpdatedChart = () => {
     display: none
     z-index: -1
 </style>
-
-<i18n>
-en:
-  loading: "Loading"
-  customerSuccess: "{companyName}'s KPIs"
-de:
-  loading: "Laden"
-  customerSuccess: "{companyName}'s KPIs"
-</i18n>

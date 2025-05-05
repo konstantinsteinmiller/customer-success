@@ -115,7 +115,7 @@ const chartOptions = {
 const updateChartAnnotations = () => {
   try {
     const annotations: any[] = []
-    const kpiWithoutStdDevList = ['totalCompanies', 'avgFeedForwardsPerSurvey']
+    const kpiWithoutStdDevList = ['totalCompanies']
     if (props.showStdDev && props.kpi?.stdDev && !kpiWithoutStdDevList.includes(props.id)) {
       const lowerBound = props.kpi?.stdDev.lowerBound
       const upperBound = props.kpi?.stdDev.upperBound

@@ -47,7 +47,7 @@ watch(selectedCompany, (newValue: Company) => {
 </script>
 
 <template>
-  <div class="space-y-4 w-48 mx-4 my-3">
+  <div class="w-60 h-9 self-center justify-self-center">
     <v-select
       v-model="selectedCompany"
       :items="companiesList"

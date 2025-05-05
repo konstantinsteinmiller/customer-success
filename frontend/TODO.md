@@ -13,16 +13,17 @@
 - [x] Vergleich einzelne Umfrage Kpi vs avg over companies - Line chart
 - [x] evtl. checkbox mit Standardabweichung
   - [x] evtl. checkbox mit Standardabweichung für bar charts
+  - [ ] calc remaining avg. per FF stat std dev
 - [x] std dev bevorzugt mit fläche, alternativ mit weiterem Datensatz als linie
 - [x] save visitors data to db
 - [x] progress chart runden
-- [ ] Widget drag and drop or select widget order list
+- [x] Widget drag and drop or select widget order list
 - [x] tail cut 5 last survey in progress chart
 - [x] update kpi stddev to t shape
 - [x] be able to print to PDF or similar to allow to forward the view of a clients' data to them https://majidzeno.hashnode.dev/effortless-pdf-generation-in-vue
 - [ ] be able to select a different view with the development over time (half-year intervals) -> see draft
 - [ ] https://joineer.slack.com/archives/C01CV1D3464/p1743603999532109
-- [ ] fix getUser after login to have correct intial chart load
-- [ ] fix overlap header with stddev button
+- [x] fix getUser after login to have correct initial chart load
+- [x] fix overlap header with stddev button
 
  
