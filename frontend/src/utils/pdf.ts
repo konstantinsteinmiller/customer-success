@@ -1,27 +1,19 @@
 import { jsPDF } from 'jspdf'
 import domtoimage from 'dom-to-image'
+import { ref, Ref } from 'vue'
 
+export const isPrinting: Ref<boolean> = ref(false)
 export const generatePdf = (fileName, element) => {
+  isPrinting.value = true
   /* adjust card colors to make it better visible on white pdf background */
   const $vcards = document.querySelectorAll('.v-card')
-  const $vtoolbar = document.querySelector('.v-toolbar__content')
-  const $pdfScreenTarget = document.querySelector('.pdf-screen-target')
-
-  /* remove company selector and std dev button */
-  const $companySelector = document.querySelector('.company-selector')
-  const $stdDevButton = document.querySelector('.show-std-dev')
-  $companySelector?.classList?.toggle('company-selector--print-pdf')
-  $stdDevButton?.classList?.toggle('show-std-dev--print-pdf')
 
   for (const $card of $vcards) {
-    $card.classList.toggle('v-card--print-pdf')
+    $card.classList.add('v-card--print-pdf')
     if ($card.classList.contains('card--greyed-out')) {
-      $card.classList.toggle('card--print-pdf-hidden')
+      $card.classList.add('card--print-pdf-hidden')
     }
   }
-  $vtoolbar?.classList?.add('v-toolbar--print-pdf')
-
-  $pdfScreenTarget?.classList?.toggle('pdf-screen-target--print-pdf')
 
   setTimeout(() => {
     const $targetToPrint = document.querySelector(element)
@@ -39,7 +31,7 @@ export const generatePdf = (fileName, element) => {
 
     // Capture the main element with the specified background color
     domtoimage
-      .toJpeg($targetToPrint, { quality: 1.0, bgcolor: 'white' })
+      .toJpeg($targetToPrint, { quality: 1.0, bgcolor: 'white' }) /*bgcolor is not a typo here....*/
       .then(function (dataUrl) {
         const img = new Image()
         img.src = dataUrl
@@ -76,18 +68,13 @@ export const generatePdf = (fileName, element) => {
         console.error('Error capturing DOM:', error)
       })
       .finally(() => {
+        isPrinting.value = false
         for (const $card of $vcards) {
           $card.classList.remove('v-card--print-pdf')
           if ($card.classList.contains('card--greyed-out')) {
             $card.classList.remove('card--print-pdf-hidden')
           }
         }
-        $vtoolbar.classList.remove('v-toolbar--print-pdf')
-        $pdfScreenTarget?.classList?.remove('pdf-screen-target--print-pdf')
-
-        /* revert std. dev. button and company selector */
-        $companySelector?.classList?.remove('company-selector--print-pdf')
-        $stdDevButton?.classList?.remove('show-std-dev--print-pdf')
       })
-  }, 200)
+  }, 400)
 }

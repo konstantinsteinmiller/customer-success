@@ -213,7 +213,7 @@ const recreateChart = () => {
       setupChartInstance()
     })
     hasUpdatedChart = true
-  }, 200)
+  }, 300)
 }
 
 const setupChartInstance = (ctx?: any) => {

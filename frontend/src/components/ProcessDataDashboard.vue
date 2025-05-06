@@ -16,6 +16,8 @@ import { useUser } from '@/use/useUser'
 import draggable from 'vuedraggable'
 import { useWidgetOrder } from '@/use/useWidgetOrder'
 import DashboardHeader from '@/components/molecules/DashboardHeader.vue'
+import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
+import Widget from '@/components/organism/Widget.vue'
 
 const props = defineProps({
   data: {
@@ -177,22 +179,17 @@ const { widgetsList } = useWidgetOrder(filteredProcessDataList, 'barChartsWidget
       class="flex flex-wrap gap-4 w-full"
     >
       <template #item="{ element }">
-        <v-card
-          :key="element.id"
-          class="basis-[100%] sm:basis-[49%] md:basis-[31%] xl:basis-[23%] flex-grow"
-          :class="{ 'v-card__loader--hidden': !isLoading }"
-          :disabled="isLoading"
-          :loading="isLoading"
+        <Widget
+          :kpi="element.id"
+          :isLoading="isLoading"
         >
-          <v-card-text>
-            <KPIComparison
-              :kpi="element"
-              :id="element.id"
-              :showStdDev="showStdDev"
-              @update="onUpdatedChart"
-            />
-          </v-card-text>
-        </v-card>
+          <KPIComparison
+            :kpi="element"
+            :id="element.id"
+            :showStdDev="showStdDev"
+            @update="onUpdatedChart"
+          />
+        </Widget>
       </template>
     </draggable>
   </v-row>

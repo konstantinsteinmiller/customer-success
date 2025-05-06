@@ -38,12 +38,18 @@ const menuItems = ref([
   },
   {
     id: 2,
+    text: t('yearDevelopment'),
+    icon: 'mdi-chart-timeline',
+    action: () => router.push({ name: 'year-development' }),
+  },
+  {
+    id: 3,
     text: t('companiesSelect'),
     icon: 'mdi-domain',
     action: () => router.push({ name: 'companies' }),
   },
   {
-    id: 3,
+    id: 4,
     text: t('visitors'),
     icon: 'mdi-home-analytics',
     action: () => router.push({ name: 'visitors' }),
@@ -168,11 +174,9 @@ const onPrintClick = () => {
       </template>
     </v-app-bar>
 
-    <!--    <div class="pdf-screen-target">-->
     <v-main style="--v-layout-top: 48px">
       <RouterView />
     </v-main>
-    <!--    </div>-->
 
     <v-fab
       v-show="hasScrolledToBottomOfWindow"
@@ -221,6 +225,7 @@ en:
   customerSuccess: 'Customer Success'
   companiesSelect: 'Companies Select'
   progress: 'Survey Progression'
+  yearDevelopment: 'Yearly'
   visitors: 'Webpage Visitors'
   login: 'Login'
   logout: 'Logout'
@@ -228,6 +233,7 @@ de:
   customerSuccess: 'Kundenerfolg Dashboard'
   companiesSelect: 'Unternehmen auswählen'
   progress: 'Umfragen Progression'
+  yearDevelopment: 'Jährliche Entwicklung'
   visitors: 'Webseite Besucher'
   login: 'Login'
   logout: 'Logout'

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { computed } from 'vue'
+import { useUser } from '@/use/useUser'
 
 const props = defineProps({
   kpi: {
@@ -12,23 +13,29 @@ const props = defineProps({
   },
 })
 
+const { kpiPrintMap } = useUser()
+
 let storedKpiPrintHideList = localStorage.getItem('showPrintHide')
 storedKpiPrintHideList = storedKpiPrintHideList ? JSON.parse(storedKpiPrintHideList) : null
 
-const kpiPrintMap: Ref<Map<string, boolean>> = ref(new Map())
-if (storedKpiPrintHideList.length) {
-  console.log('storedKpiPrintHideList: ', storedKpiPrintHideList)
-  storedKpiPrintHideList?.forEach(([kpi, value]: [string, boolean]) => {
-    kpiPrintMap.value.set(kpi, value)
+if (storedKpiPrintHideList?.length) {
+  storedKpiPrintHideList?.forEach((kpi: string) => {
+    kpiPrintMap.value[kpi] = true
   })
 }
 
 const togglePrintHide = (kpi: string) => {
-  kpiPrintMap.value.set(kpi, !kpiPrintMap.value.get(kpi))
-  const greyedOutKpisList = Array.from(kpiPrintMap.value.entries()).filter(([kpi, value]) => value)
+  kpiPrintMap.value[kpi] = !kpiPrintMap.value[kpi]
+
+  const greyedOutKpisList = Object.keys(kpiPrintMap.value)
+    .filter((key: string) => kpiPrintMap.value[key])
+    .map((key: string) => key)
 
   localStorage.setItem('showPrintHide', JSON.stringify(greyedOutKpisList))
 }
+const isGreyedOut = computed(() => {
+  return kpiPrintMap.value[props.kpi] === true
+})
 </script>
 
 <template>
@@ -38,21 +45,19 @@ const togglePrintHide = (kpi: string) => {
     :class="{
       'v-card__loader--hidden': !isLoading,
       [`card-${kpi}`]: true,
-      'card--greyed-out': !!kpiPrintMap.get(kpi),
+      'card--greyed-out': isGreyedOut,
     }"
     :disabled="isLoading"
     :loading="isLoading"
   >
     <template #title>
-      <v-fab
-        class="ms-4 absolute mt-6 mr-1 z-100 opacity-100 hover:opacity-100"
-        icon="mdi-plus"
-        location="top end"
-        size="small"
-        absolute
-        offset
-        @click="togglePrintHide(kpi)"
-      ></v-fab>
+      <div class="flex justify-end items-center relative h-[0px] overflow-visible">
+        <v-icon
+          class="grey-out-button !px-4 !py-4 absolute top-4 -right-2 rotate-45 !text-[#656565] z-100 hover:cursor-pointer outline-none"
+          icon="mdi-plus"
+          @click="togglePrintHide(kpi)"
+        />
+      </div>
     </template>
     <v-card-text>
       <slot></slot>
@@ -60,4 +65,26 @@ const togglePrintHide = (kpi: string) => {
   </v-card>
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.v-card
+  :deep(.v-card-item__content), :deep(.v-card-title)
+    overflow: visible
+  &.card--greyed-out
+    background-color: #f5f5f5
+    opacity: 0.4
+    //pointer-events: none
+  &.card--print-pdf-hidden
+    display: none
+    z-index: -1
+  :deep(i.grey-out-button), :deep(i.grey-out-button:before)
+    overflow: visible
+  .grey-out-button
+    overflow: visible
+    &::before
+      padding: 2rem
+      border-radius: 2rem
+
+.pdf-screen-target--print-pdf
+  .grey-out-button, :deep(.grey-out-button)
+    display: none
+</style>

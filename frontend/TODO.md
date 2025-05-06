@@ -13,7 +13,7 @@
 - [x] Vergleich einzelne Umfrage Kpi vs avg over companies - Line chart
 - [x] evtl. checkbox mit Standardabweichung
   - [x] evtl. checkbox mit Standardabweichung für bar charts
-  - [ ] calc remaining avg. per FF stat std dev
+  - [x] calc remaining avg. per FF stat std dev
 - [x] std dev bevorzugt mit fläche, alternativ mit weiterem Datensatz als linie
 - [x] save visitors data to db
 - [x] progress chart runden
@@ -26,7 +26,7 @@
 - [x] fix getUser after login to have correct initial chart load
 - [x] fix overlap header with stddev button
 - [x] remove buttons from print
-- [ ] deselect widget from print view
+- [x] deselect widget from print view
 - [ ] Jahres chart vergleich aller Umfragen aller companies
 
 

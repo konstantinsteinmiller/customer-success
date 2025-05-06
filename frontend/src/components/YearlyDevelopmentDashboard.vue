@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ComputedRef, onMounted, Ref, ref, watch } from 'vue'
+import { computed, ComputedRef, onMounted, Ref, ref } from 'vue'
 import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/utils/transformData'
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
@@ -81,7 +81,16 @@ const calculateAvgKPIs = (surveysList: any[]): KPIData => {
 
 const pickedKpisPerSurveyOfRelevantCompaniesList: ComputedRef<RelevantSurveyMetrics[]> = computed(() =>
   relevantCompaniesWithSurveysList.value.map((company: any) => {
-    return calculateAvgKPIs(company.surveysList)
+    const filteredToLastYearSurveysList = company.surveysList.filter(survey => {
+      console.log('survey: ', survey)
+      const surveyDate = new Date(survey.endDate)
+      const currentDate = new Date()
+      const oneYearAgo = new Date(currentDate.setFullYear(currentDate.getFullYear() - 1))
+      return surveyDate >= oneYearAgo
+    })
+    const pickedKpisList = calculateAvgKPIs(company.surveysList)
+    console.log('pickedKpisList: ', pickedKpisList)
+    return pickedKpisList
   })
 )
 
@@ -123,7 +132,7 @@ const filteredProcessDataList = computed(() => {
           companiesAvg: referenceKpisPerSurveyList
             .map((survey: any) => survey[key] || 0)
             .slice(0, showableSurveys.value),
-          stdDev: showStdDev.value ? withStdDevPerSurveyList[key]?.slice(0, showableSurveys.value) || [] : [],
+          stdDev: /*showStdDev.value ? withStdDevPerSurveyList[key]?.slice(0, showableSurveys.value) || [] : */ [],
           id: key,
         }
       }

@@ -3,7 +3,7 @@ import { Ref, ref } from 'vue'
 import { useAnalytics } from '@/use/useAnalytics'
 import { useUser } from '@/use/useUser'
 import { Company } from '@/../../server/src/types/api'
-import SurveyProgressionDashboard from '@/components/SurveyProgressionDashboard.vue'
+import YearlyDevelopmentDashboard from '@/components/YearlyDevelopmentDashboard.vue'
 import { isPrinting } from '@/utils/pdf'
 
 const { getProcessData, companiesToSurveyMap } = useAnalytics()
@@ -39,22 +39,11 @@ fetchData()
     class="pdf-screen-target pb-8"
     :class="{ 'pdf-screen-target--print-pdf': isPrinting }"
   >
-    <SurveyProgressionDashboard
+    <YearlyDevelopmentDashboard
       :data="companiesToSurveyMap"
       :isLoading="isLoading"
     />
   </div>
 </template>
 
-<style lang="sass" scoped>
-:deep(.v-card__loader)
-  display: flex
-  justify-content: center
-  align-items: center
-  height: 100%
-
-.v-card
-  &.v-card__loader--hidden :deep(.v-card__loader)
-    display: none
-    z-index: -1
-</style>
+<style lang="sass" scoped></style>

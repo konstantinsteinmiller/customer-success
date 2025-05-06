@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { VSelect } from 'vuetify/components'
 import { Company } from '@/../../server/src/types/api'
 import { useUser } from '@/use/useUser'
+import { isPrinting } from '@/utils/pdf'
 
 const props = defineProps<{
   companies: Company[] // List of available companies with an id and name
@@ -52,6 +53,9 @@ const onSelectedChange = (companyId: Company) => {
       item-value="id"
       variant="outlined"
       class="company-selector w-full"
+      :class="{
+        'company-selector--print-pdf': isPrinting,
+      }"
       @update:modelValue="onSelectedChange"
     />
   </div>

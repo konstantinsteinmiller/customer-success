@@ -44,6 +44,12 @@ export const routes = [
     component: () => import('@/views/ProgressionView.vue'),
     meta: { auth: true },
   },
+  {
+    path: '/customer-success/year-development',
+    name: 'year-development',
+    component: () => import('@/views/YearDevelopmentView.vue'),
+    meta: { auth: true },
+  },
 ]
 const router = createRouter({
   history: createWebHistory('/#/'),

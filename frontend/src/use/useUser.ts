@@ -16,6 +16,7 @@ interface CompaniesListResult {
   data: Company[]
 }
 const selectedCompany: Ref<Company | object> = ref({ name: 'loading', id: 'loading' })
+const kpiPrintMap: Ref<Record<string, boolean>> = ref({})
 
 export const useUser = () => {
   const { t } = useI18n()
@@ -92,6 +93,7 @@ export const useUser = () => {
     selectedCompaniesRef,
     selectedCompany,
     totalCompanies,
+    kpiPrintMap,
     userProfile,
   }
 }

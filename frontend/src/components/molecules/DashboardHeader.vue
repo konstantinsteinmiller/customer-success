@@ -2,6 +2,7 @@
 import CompanySelector from '@/components/companySelector.vue'
 import { useUser } from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
+import { isPrinting } from '@/utils/pdf'
 const { selectedCompaniesRef, selectedCompany } = useUser()
 const { t } = useI18n()
 
@@ -41,6 +42,7 @@ defineProps({
         <div class="flex justify-center items-center">
           <v-btn
             class="show-std-dev py-2"
+            :class="{ 'show-std-dev--hidden': isPrinting }"
             variant="elevated"
             color="outline"
             size="large"
@@ -58,7 +60,7 @@ defineProps({
 </template>
 
 <style scoped lang="sass">
-.show-std-dev.show-std-dev--print-pdf
+.show-std-dev.show-std-dev--hidden
   display: none
 </style>
 

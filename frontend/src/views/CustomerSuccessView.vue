@@ -5,6 +5,7 @@ import DateSelector from '@/components/DateSelector.vue'
 import ProcessDataDashboard from '@/components/ProcessDataDashboard.vue'
 import { useUser } from '@/use/useUser'
 import { Company } from '@/../../server/src/types/api'
+import { isPrinting } from '@/utils/pdf'
 
 const { getProcessData, companiesToSurveyMap } = useAnalytics()
 const { selectedCompaniesList } = useUser()
@@ -35,7 +36,10 @@ const fetchData = async () => {
 </script>
 
 <template>
-  <div class="pdf-screen-target pb-8">
+  <div
+    class="pdf-screen-target pb-8"
+    :class="{ 'pdf-screen-target--print-pdf': isPrinting }"
+  >
     <ProcessDataDashboard
       :data="companiesToSurveyMap"
       :isLoading="isLoading"
