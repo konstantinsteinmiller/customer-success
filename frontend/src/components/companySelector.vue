@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { VSelect } from 'vuetify/components'
 import { Company } from '@/../../server/src/types/api'
+import { useUser } from '@/use/useUser'
 
 const props = defineProps<{
   companies: Company[] // List of available companies with an id and name
-  modelValue: Company // Currently selected company object
 }>()
 
+const { selectedCompany } = useUser()
 const { t } = useI18n()
 
-const emit = defineEmits<{
-  (event: 'update:modelValue', value: Company): void
-}>()
-
-const selectedCompany = ref<Company>(props.modelValue.value)
-
+const selected: Ref<Company | null> = ref<Company | null>(selectedCompany.value || null)
 const companiesList = computed(() => {
   return props.companies.map((company: Company) => {
     return {
@@ -27,29 +23,26 @@ const companiesList = computed(() => {
 })
 
 // Watch for changes in the selected company and emit the update
-watch(
-  () => props.modelValue,
-  (newValue: Company) => {
-    if (typeof newValue === 'string') {
-      selectedCompany.value = props.companies.find(company => company.id === newValue)
+watch(selectedCompany, (newValue: Company, oldValue: Company) => {
+  if (newValue.id !== oldValue.id) {
+    const companyId = newValue.id || newValue
+    if (typeof companyId === 'string') {
+      selected.value = companyId
+    } else {
+      selected.value = newValue?.id
     }
-    selectedCompany.value = newValue
-  },
-  { immediate: true }
-)
-watch(selectedCompany, (newValue: Company) => {
-  let company = newValue.value || newValue
-  if (typeof company === 'string') {
-    company = props.companies.find(company => company.id === newValue)
   }
-  emit('update:modelValue', company)
 })
+
+const onSelectedChange = (companyId: Company) => {
+  selectedCompany.value = props.companies.find(company => company.id === companyId)
+}
 </script>
 
 <template>
   <div class="w-60 h-9 self-center justify-self-center">
     <v-select
-      v-model="selectedCompany"
+      v-model="selected"
       :items="companiesList"
       :label="t('selectCompany')"
       density="compact"
@@ -58,12 +51,16 @@ watch(selectedCompany, (newValue: Company) => {
       item-title="name"
       item-value="id"
       variant="outlined"
-      class="w-full"
+      class="company-selector w-full"
+      @update:modelValue="onSelectedChange"
     />
   </div>
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.company-selector.company-selector--print-pdf
+  display: none
+</style>
 
 <i18n>
 en:

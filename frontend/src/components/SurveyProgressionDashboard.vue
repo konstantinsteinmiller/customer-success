@@ -5,7 +5,6 @@ import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/u
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
 import { KPIData, RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
-import CompanySelector from '@/components/companySelector.vue'
 import { useUser } from '@/use/useUser'
 import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
 import draggable from 'vuedraggable'
@@ -153,8 +152,26 @@ const onUpdatedChart = () => {
   isLoadingChart.value = false
 }
 
-const drag = ref(false)
+const drag: Ref<boolean> = ref(false)
 const { widgetsList } = useWidgetOrder(filteredProcessDataList, 'progressionWidgetsSortingOrder')
+
+let storedKpiPrintHideList = localStorage.getItem('showPrintHide')
+storedKpiPrintHideList = storedKpiPrintHideList ? JSON.parse(storedKpiPrintHideList) : null
+
+console.log('storedKpiPrintHideList: ', storedKpiPrintHideList)
+const kpiPrintMap: Ref<Map<string, boolean>> = ref(new Map())
+if (storedKpiPrintHideList?.length) {
+  storedKpiPrintHideList?.forEach(([kpi, value]: [string, boolean]) => {
+    kpiPrintMap.value.set(kpi, value)
+  })
+}
+
+const togglePrintHide = (kpi: string) => {
+  kpiPrintMap.value.set(kpi, !kpiPrintMap.value.get(kpi))
+  const greyedOutKpisList = Array.from(kpiPrintMap.value.entries()).filter(([kpi, value]) => value)
+
+  localStorage.setItem('showPrintHide', JSON.stringify(greyedOutKpisList))
+}
 </script>
 
 <template>
@@ -202,10 +219,25 @@ const { widgetsList } = useWidgetOrder(filteredProcessDataList, 'progressionWidg
         <v-card
           :key="element.id"
           class="basis-[100%] sm:basis-[49%] md:basis-[49%] xl:basis-[31%] flex-grow"
-          :class="{ 'v-card__loader--hidden': !isLoading }"
+          :class="{
+            'v-card__loader--hidden': !isLoading,
+            [`card-${element.id}`]: true,
+            'card--greyed-out': !!kpiPrintMap.get(element.id),
+          }"
           :disabled="isLoading"
           :loading="isLoading"
         >
+          <template #title>
+            <v-fab
+              class="ms-4 absolute mt-6 mr-1 z-100 opacity-100 hover:opacity-100"
+              icon="mdi-plus"
+              location="top end"
+              size="small"
+              absolute
+              offset
+              @click="togglePrintHide(element.id)"
+            ></v-fab>
+          </template>
           <v-card-text>
             <MultivalueLineChart
               :title="t(element.id)"
@@ -230,6 +262,13 @@ const { widgetsList } = useWidgetOrder(filteredProcessDataList, 'progressionWidg
   height: 100%
 
 .v-card
+  &.card--greyed-out
+    background-color: #f5f5f5
+    opacity: 0.4
+    pointer-events: none
+  &.card--print-pdf-hidden
+    display: none
+    z-index: -1
   &.v-card__loader--hidden :deep(.v-card__loader)
     display: none
     z-index: -1

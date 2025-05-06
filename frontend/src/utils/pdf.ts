@@ -6,8 +6,18 @@ export const generatePdf = (fileName, element) => {
   const $vcards = document.querySelectorAll('.v-card')
   const $vtoolbar = document.querySelector('.v-toolbar__content')
   const $pdfScreenTarget = document.querySelector('.pdf-screen-target')
+
+  /* remove company selector and std dev button */
+  const $companySelector = document.querySelector('.company-selector')
+  const $stdDevButton = document.querySelector('.show-std-dev')
+  $companySelector?.classList?.toggle('company-selector--print-pdf')
+  $stdDevButton?.classList?.toggle('show-std-dev--print-pdf')
+
   for (const $card of $vcards) {
     $card.classList.toggle('v-card--print-pdf')
+    if ($card.classList.contains('card--greyed-out')) {
+      $card.classList.toggle('card--print-pdf-hidden')
+    }
   }
   $vtoolbar?.classList?.add('v-toolbar--print-pdf')
 
@@ -68,9 +78,16 @@ export const generatePdf = (fileName, element) => {
       .finally(() => {
         for (const $card of $vcards) {
           $card.classList.remove('v-card--print-pdf')
+          if ($card.classList.contains('card--greyed-out')) {
+            $card.classList.remove('card--print-pdf-hidden')
+          }
         }
         $vtoolbar.classList.remove('v-toolbar--print-pdf')
         $pdfScreenTarget?.classList?.remove('pdf-screen-target--print-pdf')
+
+        /* revert std. dev. button and company selector */
+        $companySelector?.classList?.remove('company-selector--print-pdf')
+        $stdDevButton?.classList?.remove('show-std-dev--print-pdf')
       })
   }, 200)
 }

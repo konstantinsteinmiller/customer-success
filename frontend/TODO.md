@@ -25,5 +25,10 @@
 - [ ] https://joineer.slack.com/archives/C01CV1D3464/p1743603999532109
 - [x] fix getUser after login to have correct initial chart load
 - [x] fix overlap header with stddev button
+- [x] remove buttons from print
+- [ ] deselect widget from print view
+- [ ] Jahres chart vergleich aller Umfragen aller companies
+
+
 
  

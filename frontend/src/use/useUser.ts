@@ -15,6 +15,7 @@ const userProfile: Ref<any> = ref({})
 interface CompaniesListResult {
   data: Company[]
 }
+const selectedCompany: Ref<Company | object> = ref({ name: 'loading', id: 'loading' })
 
 export const useUser = () => {
   const { t } = useI18n()
@@ -28,7 +29,6 @@ export const useUser = () => {
     },
     { once: true }
   )
-  const selectedCompany: Ref<Company | object> = ref({ name: t('loading'), id: 'loading' })
 
   const selectedCompaniesRef = computed(() => {
     /* if there is a user selection of companies, return the companies */

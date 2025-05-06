@@ -21,6 +21,7 @@ import { useRoute } from 'vue-router'
 Chart.register(LineController, Tooltip, LineElement, PointElement, LinearScale, CategoryScale, Legend, Filler)
 
 const { t } = useI18n()
+const route = useRoute()
 const { isAnimatingMap } = useAnalytics()
 const emit = defineEmits(['update'])
 const props = defineProps({
@@ -165,63 +166,65 @@ const updateChart = () => {
     chartData.datasets[2].data = []
     chartData.datasets[3].data = []
   }
+  // chartInstance.value?.update('none')
   emit('update')
 }
 
+let startTime = performance.now()
+let hasUpdatedChart = false
 watch(
   () => props.data,
   async (newValue, oldValue) => {
     const hasDataChanged = deepCompare(newValue, oldValue).changed || false
+    //
+    // await new Promise(resolve => {
+    //   if (isAnimating.value) {
+    //     setTimeout(() => {
+    //       resolve(true)
+    //     }, 1000)
+    //   } else {
+    //     resolve(false)
+    //   }
+    // })
 
-    await new Promise(resolve => {
-      if (isAnimating.value) {
-        setTimeout(() => {
-          resolve(true)
-        }, 1000)
-      } else {
-        resolve(false)
-      }
-    })
     if (hasDataChanged && chartInstance.value) {
-      try {
-        updateChart()
-
-        /* fix weird animation and chart destroy race condition
-         * wait for the animation to finish before continuing to
-         * destroy the chart to prevent chart.js error that breaks rendering */
-        await new Promise(resolve => {
-          if (isAnimating.value) {
-            const interval = setInterval(() => {
-              if (!isAnimating.value) {
-                clearInterval(interval)
-                resolve(true)
-              }
-            }, 300)
-          } else resolve(true)
-        })
-
-        chartInstance.value.destroy()
-        chartInstance.value = new Chart(chartCanvas.value?.getContext('2d')!, {
-          // Use non-null assertion here
-          type: 'line',
-          data: chartData,
-          options: chartOptions,
-        })
-      } catch (e) {
-        console.error('Error creating chart:', e)
-      }
+      hasUpdatedChart = false
+      startTime = performance.now()
+      updateChart()
+      recreateChart()
     }
   },
   { deep: true }
 )
 
-const setupChartInstance = ctx => {
+const recreateChart = () => {
+  setTimeout(() => {
+    if (hasUpdatedChart) return
+    const endTime = performance.now()
+    const ctx = chartCanvas.value?.getContext('2d')
+    if (endTime - startTime < 2000) {
+      recreateChart()
+      return
+    }
+    if (!ctx?.save) return
+    chartInstance.value?.destroy()
+    chartInstance.value = null
+    setTimeout(() => {
+      setupChartInstance()
+    })
+    hasUpdatedChart = true
+  }, 200)
+}
+
+const setupChartInstance = (ctx?: any) => {
+  ctx = ctx || chartCanvas.value?.getContext('2d')
   chartInstance.value = new Chart(ctx, {
     type: 'line',
     data: chartData,
     options: chartOptions,
   })
 }
+
 onMounted(() => {
   const ctx = chartCanvas.value?.getContext('2d')
 
@@ -234,21 +237,20 @@ onMounted(() => {
 })
 
 onBeforeUnmount(async () => {
-  /* await animation of the created instance before attempting destruction */
-  await new Promise(async resolve => {
-    if (isAnimating.value) {
-      const interval = setInterval(() => {
-        if (!isAnimating.value) {
-          clearInterval(interval)
-          resolve(true)
-        }
-      }, 300)
-    }
-  })
-  chartInstance.value?.destroy()
-  chartInstance.value = null //prevent other errors
+  // /* await animation of the created instance before attempting destruction */
+  // await new Promise(async resolve => {
+  //   if (isAnimating.value) {
+  //     const interval = setInterval(() => {
+  //       if (!isAnimating.value) {
+  //         clearInterval(interval)
+  //         resolve(true)
+  //       }
+  //     }, 300)
+  //   }
+  // })
+  // chartInstance.value?.destroy()
+  // chartInstance.value = null //prevent other errors
 })
-const route = useRoute()
 </script>
 
 <template>
@@ -262,8 +264,11 @@ const route = useRoute()
       >{{ t(props.id) }}</v-card-title
     >
   </div>
-  <div class="h-80">
-    <canvas ref="chartCanvas"></canvas>
+  <div class="h-80 relative">
+    <canvas
+      class="absolute top-0 left-0"
+      ref="chartCanvas"
+    />
   </div>
 </template>
 

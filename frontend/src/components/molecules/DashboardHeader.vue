@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 const { selectedCompaniesRef, selectedCompany } = useUser()
 const { t } = useI18n()
 
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     required: true,
@@ -40,7 +40,7 @@ const props = defineProps({
         </div>
         <div class="flex justify-center items-center">
           <v-btn
-            class="py-2"
+            class="show-std-dev py-2"
             variant="elevated"
             color="outline"
             size="large"
@@ -51,16 +51,16 @@ const props = defineProps({
             {{ showStdDev ? t('hide') : t('show') }} {{ t('stdDev') }}
           </v-btn>
         </div>
-        <CompanySelector
-          :companies="selectedCompaniesRef"
-          v-model="selectedCompany"
-        />
+        <CompanySelector :companies="selectedCompaniesRef" />
       </div>
     </v-card-text>
   </v-card>
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.show-std-dev.show-std-dev--print-pdf
+  display: none
+</style>
 
 <i18n>
 en:

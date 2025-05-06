@@ -160,63 +160,6 @@ const updateChartAnnotations = () => {
           label: { enabled: false },
         }
       )
-      // })
-
-      /*annotations.push(
-      // {
-      //   type: 'line',
-      //   id: 'meanLine',
-      //   borderColor: 'rgb(100, 149, 237)',
-      //   borderDash: [6, 6],
-      //   borderDashOffset: 0,
-      //   borderWidth: 1,
-      //   label: {
-      //     display: true,
-      //     backgroundColor: 'rgb(100, 149, 237)',
-      //     content: () => 'Average: ' + +props.kpi.stdDev.mean.toFixed(1),
-      //   },
-      //   scaleID: 'y',
-      //   value: () => +props.kpi.stdDev.mean.toFixed(1),
-      // },
-      {
-        type: 'line',
-        id: 'upperBoundLine',
-        borderColor: 'rgba(102, 102, 102, 0.5)',
-        borderDash: [6, 6],
-        borderDashOffset: 0,
-        borderWidth: 1,
-        label: {
-          display: true,
-          backgroundColor: 'rgba(102, 102, 102, 0.5)',
-          color: 'white',
-          content: () => +props.kpi.stdDev.upperBound.toFixed(1),
-          position: 'start',
-        },
-        scaleID: 'y',
-        value: () => +props.kpi.stdDev.upperBound.toFixed(1),
-      },
-      {
-        type: 'line',
-        id: 'lowerBoundLine',
-        borderColor: 'rgba(102, 102, 102, 0.5)',
-        borderDash: [6, 6],
-        borderDashOffset: 0,
-        xMin: 1,
-        xMax: 2,
-        yMin: 1,
-        yMax: 52,
-        borderWidth: 1,
-        label: {
-          display: true,
-          backgroundColor: 'rgba(102, 102, 102, 0.5)',
-          color: 'white',
-          content: () => +props.kpi.stdDev.lowerBound.toFixed(1),
-          position: 'end',
-        },
-        scaleID: 'y',
-        value: () => +props.kpi.stdDev.lowerBound.toFixed(1),
-      }
-    )*/
     }
     chartOptions.plugins.annotation.annotations = annotations
     if (chartInstance.value) {
@@ -231,60 +174,92 @@ const updateChart = () => {
   if (!props.kpi) return
 
   const data = props.kpi
-  // chartData.labels = props.labels
   chartData.datasets[0].data = [data?.current]
   chartData.datasets[1].data = [data?.companiesAvg]
   updateChartAnnotations()
   emit('update')
 }
 
+let startTime = performance.now()
+let hasUpdatedChart = false
 watch(
   () => props.kpi,
   async (newValue, oldValue) => {
     const hasDataChanged = deepCompare(newValue, oldValue).changed || false
 
-    await new Promise(resolve => {
-      if (isAnimating.value) {
-        setTimeout(() => {
-          resolve(true)
-        }, 1000)
-      } else {
-        resolve(false)
-      }
-    })
+    // await new Promise(resolve => {
+    //   if (isAnimating.value) {
+    //     setTimeout(() => {
+    //       resolve(true)
+    //     }, 1000)
+    //   } else {
+    //     resolve(false)
+    //   }
+    // })
 
     if (hasDataChanged && chartInstance.value) {
+      hasUpdatedChart = false
+      startTime = performance.now()
       updateChart()
+      recreateChart()
 
-      try {
-        /* fix weird animation and chart destroy race condition
-         * wait for the animation to finish before continuing to
-         * destroy the chart to prevent chart.js error that breaks rendering */
-        await new Promise(resolve => {
-          if (isAnimating.value) {
-            const interval = setInterval(() => {
-              if (!isAnimating.value) {
-                clearInterval(interval)
-                resolve(true)
-              }
-            }, 300)
-          } else resolve(true)
-        })
-
-        chartInstance.value.destroy()
-        chartInstance.value = new Chart(chartCanvas.value?.getContext('2d')!, {
-          // Use non-null assertion here
-          type: 'bar',
-          data: chartData,
-          options: chartOptions,
-        })
-      } catch (e) {
-        console.error('Error creating chart:', e)
-      }
+      // try {
+      //   /* fix weird animation and chart destroy race condition
+      //    * wait for the animation to finish before continuing to
+      //    * destroy the chart to prevent chart.js error that breaks rendering */
+      //   await new Promise(resolve => {
+      //     if (isAnimating.value) {
+      //       const interval = setInterval(() => {
+      //         if (!isAnimating.value) {
+      //           clearInterval(interval)
+      //           resolve(true)
+      //         }
+      //       }, 300)
+      //     } else resolve(true)
+      //   })
+      //
+      //   chartInstance.value.destroy()
+      //   chartInstance.value = new Chart(chartCanvas.value?.getContext('2d')!, {
+      //     // Use non-null assertion here
+      //     type: 'bar',
+      //     data: chartData,
+      //     options: chartOptions,
+      //   })
+      // } catch (e) {
+      //   console.error('Error creating chart:', e)
+      // }
     }
   },
   { deep: true }
 )
+
+const recreateChart = () => {
+  setTimeout(() => {
+    if (hasUpdatedChart) return
+    const endTime = performance.now()
+    const ctx = chartCanvas.value?.getContext('2d')
+    if (endTime - startTime < 2000) {
+      recreateChart()
+      return
+    }
+    if (!ctx?.save) return
+    chartInstance.value?.destroy()
+    chartInstance.value = null
+    setTimeout(() => {
+      setupChartInstance()
+    })
+    hasUpdatedChart = true
+  }, 200)
+}
+
+const setupChartInstance = (ctx?: any) => {
+  ctx = ctx || chartCanvas.value?.getContext('2d')
+  chartInstance.value = new Chart(ctx, {
+    type: 'bar',
+    data: chartData,
+    options: chartOptions,
+  })
+}
 
 onMounted(() => {
   const ctx = chartCanvas.value?.getContext('2d')
@@ -293,27 +268,23 @@ onMounted(() => {
   updateChart()
 
   if (ctx) {
-    chartInstance.value = new Chart(ctx, {
-      type: 'bar',
-      data: chartData,
-      options: chartOptions,
-    })
+    setupChartInstance(ctx)
   }
 })
 
 onBeforeUnmount(async () => {
-  await new Promise(async resolve => {
-    if (isAnimating.value) {
-      const interval = setInterval(() => {
-        if (!isAnimating.value) {
-          clearInterval(interval)
-          resolve(true)
-        }
-      }, 300)
-    }
-  })
-  chartInstance.value?.destroy()
-  chartInstance.value = null //prevent other errors
+  // await new Promise(async resolve => {
+  //   if (isAnimating.value) {
+  //     const interval = setInterval(() => {
+  //       if (!isAnimating.value) {
+  //         clearInterval(interval)
+  //         resolve(true)
+  //       }
+  //     }, 300)
+  //   }
+  // })
+  // chartInstance.value?.destroy()
+  // chartInstance.value = null //prevent other errors
 })
 </script>
 
