@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import { logger } from '@/utils/logger'
 import axios from 'axios'
-import { config } from '@/config/env'
 import { PiwikAuthResult, PiwikQueryResult } from '@/types/piwik'
 import { VisitorsService } from '@/services/visitors.service'
 import type { VisitorsList } from '@/types/api'
 import { cache, getCacheKeyVisitors } from '@/utils/cache'
 import { getUTCDay, getYYYYMM } from '@/utils/date'
+import MockedPiwikResult from '@/mocks/analytics-data.mock'
 
 let tokenExpiry: number = 0
 let piwikAccessToken: string = ''
@@ -35,11 +35,13 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
   try {
     if (!isTokenValid()) {
       try {
-        const result: PiwikAuthResult = await http.post('/auth/token', {
+        const result: PiwikAuthResult = await new Promise((resolve, reject) => {
+          resolve({ data: { access_token: 'abcdef123' } })
+        }) /*await http.post('/auth/token', {
           grant_type: 'client_credentials',
           client_id: config.PIWIK_CLIENT_ID,
           client_secret: config.PIWIK_SECRET,
-        })
+        })*/
         // logger.info(result.data)
         piwikAccessToken = result.data.access_token
         http.defaults.headers.common['Authorization'] = `Bearer ${piwikAccessToken}`
@@ -69,7 +71,11 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
     }
 
     try {
-      const queryResult: PiwikQueryResult = await http.post('/api/analytics/v1/query', {
+      const queryResult: PiwikQueryResult = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({ data: { data: MockedPiwikResult } })
+        }, 100)
+      }) /* await http.post('/api/analytics/v1/query', {
         date_from: req.query.start,
         date_to: req.query.end,
         website_id: 'bca2eb5e-593a-4aa5-a0da-e502ff72b6cf',
@@ -82,29 +88,11 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
           {
             column_id: 'visitors',
           },
-          // {
-          //   column_id: 'sessions',
-          // },
-          // {
-          //   column_id: 'page_views',
-          // },
-          // {
-          //   column_id: 'goal_conversion_rate',
-          // },
-          // {
-          //   column_id: 'events_per_session',
-          // },
-          // {
-          //   column_id: 'returning_visitors_rate',
-          // },
-          // {
-          //   column_id: 'goal_conversions',
-          // },
         ],
         order_by: [[0, 'asc']],
         filters: null,
         metric_filters: null,
-      })
+      })*/
       /* take only the visitors numbers, not the date from entry[0] */
       visitorsThisMonthData = queryResult.data.data.map((entry: Array<string | number>): number => entry[1] as number)
       // logger.info(queryResult.data.data)
@@ -120,7 +108,7 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
       })
     }
 
-    logger.info(visitorsThisMonthData)
+    // logger.info(visitorsThisMonthData)
     res.status(200).json({
       message: 'Here is the monthly visiting user data you asked for',
       data: visitorsThisMonthData,
