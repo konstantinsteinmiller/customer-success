@@ -2,11 +2,10 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { googleSdkLoaded } from 'vue3-google-login'
-import axios from 'axios'
 import { useAuth } from '@/use/useAuth.js'
 import { useAuthStore } from '@/stores/authStore.ts'
 import { useUser } from '@/use/useUser'
+import { prependBaseUrl } from '@/utils/function'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -70,7 +69,7 @@ watch(
               >
                 <v-img
                   class="slide-in pa-1 d-flex mx-auto"
-                  :src="'/images/login-pw.png'"
+                  :src="prependBaseUrl('/images/login-pw.png')"
                   :max-width="$vuetify.display.xs ? 150 : 250"
                 ></v-img>
               </v-col>

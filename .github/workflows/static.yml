@@ -26,7 +26,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: master
-          path: master
+
+      - name: List directory structure
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Listing root directory:"
+          ls -al
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -35,18 +41,28 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
-        with:
-          node-version: '22.8.0'
+
+      - name: Change to frontend directory
+        run: |
+          cd frontend
+          echo "Current directory:"
+          pwd
+          echo "Listing root directory:"
+          ls -al
 
       - name: Clean install dependencies (Master)
         run: |
-          rm -rf master/node_modules
-          pnpm install --no-frozen-lockfile
+          rm -rf node_modules
+          pnpm install
         working-directory: frontend
 
       - name: Build Master Production
-        run: npm run build-github-master
+        run: pnpm run build-github-master
         working-directory: frontend
+        env:
+          VITE_NODE_ENV: ${{ secrets.VITE_NODE_ENV }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -54,8 +70,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
-        working-directory: frontend
+          path: './frontend/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

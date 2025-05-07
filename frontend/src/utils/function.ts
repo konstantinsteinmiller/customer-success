@@ -66,3 +66,10 @@ export function deepCompare(
 
   return { changed, ...(changed && { changes }) }
 }
+
+export const isProduction = process.env.NODE_ENV === 'production'
+const env = process.env.NODE_ENV
+let baseURL = import.meta.env.BASE_URL
+baseURL = baseURL.slice(0, baseURL.length - 1)
+// console.log('baseURL: ', baseURL, isProduction, env)
+export const prependBaseUrl = (url: string): string => (isProduction ? `${baseURL}${url}` : url)

@@ -7,6 +7,7 @@ import { computed, onMounted, onUnmounted, Ref, ref, shallowRef, watch } from 'v
 import { useUser } from '@/use/useUser'
 import { useAnalytics } from '@/use/useAnalytics'
 import { generatePdf } from '@/utils/pdf'
+import { prependBaseUrl } from '@/utils/function'
 
 const auth = useAuth()
 const router = useRouter()
@@ -152,7 +153,7 @@ const onPrintClick = () => {
           class="ms-1"
           icon
         >
-          <v-avatar :image="profilePicture ? profilePicture : '/images/profile.png'" />
+          <v-avatar :image="profilePicture ? profilePicture : prependBaseUrl('/images/profile.png')" />
 
           <v-menu
             activator="parent"

@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
+    "build-github-master": "run-p type-check \"build-only {@}\" -- --base=/customer-success/ --outDir=dist",
+    "build-github-develop": "run-p type-check \"build-only {@}\" -- --base=/customer-success/develop --outDir=dist/develop",
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
@@ -47,7 +49,7 @@
     "@types/express": "^5.0.0",
     "@types/jsdom": "^21.1.7",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.15.3",
     "@typescript-eslint/parser": "^8.24.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/eslint-plugin": "1.1.31",

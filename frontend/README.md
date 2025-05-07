@@ -1,5 +1,8 @@
 # customer-success
 
+## Demo
+[live-version](https://konstantinsteinmiller.github.io/customer-success) (up to 50 sec startup time for render.com backend service)
+
 includes:
 - Vue.js 3.5.x + Vuetify + chart.js + Typescript + tailwindCSS + SASS + i18n + axios + eslint + prettier
 - requires a google account for authentication with google oAuth

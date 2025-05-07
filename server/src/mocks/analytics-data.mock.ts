@@ -1,4 +1,4 @@
-export default [
+const mockAnalyticsData: any[] = [
   ['2025-04-01', 334],
   ['2025-04-02', 791],
   ['2025-04-03', 429],
@@ -30,3 +30,5 @@ export default [
   ['2025-04-29', 425],
   ['2025-04-30', 390],
 ]
+
+export default mockAnalyticsData

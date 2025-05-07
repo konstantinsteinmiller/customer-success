@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import { logger } from '@/utils/logger'
-import { http } from '@/config/api'
 import type { CompaniesListResult, CompanyToSurveyMap } from '@/types/api'
 import { SurveyMetricsService } from '@/services/survey-metrics.service'
 import { CompaniesService } from '@/services/companies.service'
@@ -56,28 +55,18 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
       cache.set(cacheKeyCompanies, companies)
 
       /* get all survey data per company */
-      const result = await new Promise((resolve, reject) => {
-        const map = MockedSurveyData /*Object.values(MockedSurveyData).reduce((acc, company: any) => {
-          const comp = {
-            name: company.name,
-            id: company.id + `${Math.ceil(Math.random() * 1000)}`,
-          }
-          const companyId = company.id
-          acc[comp.id] = { ...company, ...comp }
-          return acc
-        }, {})*/
-        // console.log('map: ', map)
+      /* const result: any = await Promise.all(
+       companies?.map(async (company: any) => {
+         return http.get(`companies/${company.id}/process-data`, {
+           headers: { 'Content-Type': 'application/json' },
+         })
+       })
+     )*/
+      companyToSurveyMap = await new Promise((resolve: any, reject: any) => {
         setTimeout(() => {
-          resolve(map)
+          resolve(MockedSurveyData)
         }, 100)
-      }) /* await Promise.all(
-        companies?.map(async (company: any) => {
-          return http.get(`companies/${company.id}/process-data`, {
-            headers: { 'Content-Type': 'application/json' },
-          })
-        })
-      )*/
-      companyToSurveyMap = result
+      })
 
       /* map from a company id to a company name with all it's surveys */
       // companyToSurveyMap = result?.reduce((acc, res, index) => {

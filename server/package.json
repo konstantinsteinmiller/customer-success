@@ -1,12 +1,13 @@
 {
   "name": "customer-success-backend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "dist/server.js",
   "description": "Api for the customer success dashboard",
   "scripts": {
     "serve": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.build.json",
+    "build-remote": "pnpm store prune && rm -rf node_modules && pnpm i && tsc -p tsconfig.build.json",
     "start": "node --import tsx dist/server.js",
     "test": "jest --config jest.config.ts",
     "test:watch": "jest --watch",
@@ -63,9 +64,5 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.3"
-  },
-  "engines": {
-    "node": ">=22.8.0",
-    "pnpm": ">=10.6.2"
   }
 }

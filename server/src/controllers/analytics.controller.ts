@@ -36,7 +36,7 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
     if (!isTokenValid()) {
       try {
         const result: PiwikAuthResult = await new Promise((resolve, reject) => {
-          resolve({ data: { access_token: 'abcdef123' } })
+          resolve({ data: { access_token: 'abcdef123', expires_in: 5500000, token_type: 'token_type' } })
         }) /*await http.post('/auth/token', {
           grant_type: 'client_credentials',
           client_id: config.PIWIK_CLIENT_ID,
@@ -73,7 +73,17 @@ export const getVisitorData = async (req: Request, res: Response, next: NextFunc
     try {
       const queryResult: PiwikQueryResult = await new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve({ data: { data: MockedPiwikResult } })
+          resolve({
+            data: {
+              data: MockedPiwikResult,
+              meta: {
+                columns: ['timestamp', 'visitors'],
+                scope: '',
+                blended_datasets: [],
+                count: 1,
+              },
+            },
+          })
         }, 100)
       }) /* await http.post('/api/analytics/v1/query', {
         date_from: req.query.start,

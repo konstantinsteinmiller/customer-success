@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref, useTemplateRef, watch } from 'vue'
-import { deepCompare } from '@/utils/functions'
+import { deepCompare } from '@/utils/function'
 import { Chart, registerables } from 'chart.js'
 import Annotation from 'chartjs-plugin-annotation'
 

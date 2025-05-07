@@ -6,5 +6,5 @@ connectDB()
 
 const isDevMode = process.env.NODE_ENV === 'development'
 app.listen(config.PORT, () => {
-  console.log(`Server running${isDevMode ?  ' on port ' + config.PORT: '' }`)
+  console.log(`Server running${isDevMode ? ' on port ' + config.PORT : ''}`)
 })

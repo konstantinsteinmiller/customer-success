@@ -18,7 +18,7 @@ export const useWidgetOrder = (dataList: Ref<any[]>, storageKey: string) => {
 
   watch(widgetsList, () => {
     /* save to localStorage whenever the user changes the widget order with <draggable> */
-    widgetSortOrder.value = widgetsList.value.map(item => item.id)
+    widgetSortOrder.value = widgetsList.value.map(item => item?.id)
     localStorage.setItem(storageKey, JSON.stringify(widgetSortOrder.value))
   })
 
