@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, Ref, ref, watch } from 'vue'
+import { Ref, ref } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { useI18n } from 'vue-i18n'
 import { CHART_COLORS } from '@/config/constants'
 import { useRoute } from 'vue-router'
 import { isKpiPercentValue } from '@/utils/analytics'
 import Annotation from 'chartjs-plugin-annotation'
-import { deepCompare } from '@/utils/functions'
 import { useAnalytics } from '@/use/useAnalytics'
+import BaseChart from '@/components/atoms/BaseChart.vue'
 
 Chart.register(...registerables, Annotation)
 
@@ -35,7 +35,7 @@ const emit = defineEmits(['update'])
 
 const route = useRoute()
 const { t } = useI18n()
-const chartCanvas = ref<HTMLCanvasElement | null>(null)
+
 const chartInstance: Ref<Chart | null> = ref(null)
 const isAnimating = ref(false) // Ref to track animation state
 isAnimatingMap[props.id] = true
@@ -179,113 +179,6 @@ const updateChart = () => {
   updateChartAnnotations()
   emit('update')
 }
-
-let startTime = performance.now()
-let hasUpdatedChart = false
-watch(
-  () => props.kpi,
-  async (newValue, oldValue) => {
-    const hasDataChanged = deepCompare(newValue, oldValue).changed || false
-
-    // await new Promise(resolve => {
-    //   if (isAnimating.value) {
-    //     setTimeout(() => {
-    //       resolve(true)
-    //     }, 1000)
-    //   } else {
-    //     resolve(false)
-    //   }
-    // })
-
-    if (hasDataChanged && chartInstance.value) {
-      hasUpdatedChart = false
-      startTime = performance.now()
-      updateChart()
-      recreateChart()
-
-      // try {
-      //   /* fix weird animation and chart destroy race condition
-      //    * wait for the animation to finish before continuing to
-      //    * destroy the chart to prevent chart.js error that breaks rendering */
-      //   await new Promise(resolve => {
-      //     if (isAnimating.value) {
-      //       const interval = setInterval(() => {
-      //         if (!isAnimating.value) {
-      //           clearInterval(interval)
-      //           resolve(true)
-      //         }
-      //       }, 300)
-      //     } else resolve(true)
-      //   })
-      //
-      //   chartInstance.value.destroy()
-      //   chartInstance.value = new Chart(chartCanvas.value?.getContext('2d')!, {
-      //     // Use non-null assertion here
-      //     type: 'bar',
-      //     data: chartData,
-      //     options: chartOptions,
-      //   })
-      // } catch (e) {
-      //   console.error('Error creating chart:', e)
-      // }
-    }
-  },
-  { deep: true }
-)
-
-const recreateChart = () => {
-  setTimeout(() => {
-    if (hasUpdatedChart) return
-    const endTime = performance.now()
-    const ctx = chartCanvas.value?.getContext('2d')
-    if (endTime - startTime < 2000) {
-      recreateChart()
-      return
-    }
-    if (!ctx?.save) return
-    chartInstance.value?.destroy()
-    chartInstance.value = null
-    setTimeout(() => {
-      setupChartInstance()
-    })
-    hasUpdatedChart = true
-  }, 200)
-}
-
-const setupChartInstance = (ctx?: any) => {
-  ctx = ctx || chartCanvas.value?.getContext('2d')
-  chartInstance.value = new Chart(ctx, {
-    type: 'bar',
-    data: chartData,
-    options: chartOptions,
-  })
-}
-
-onMounted(() => {
-  const ctx = chartCanvas.value?.getContext('2d')
-
-  // Initial update if data is already present on mount
-  updateChart()
-
-  if (ctx) {
-    setupChartInstance(ctx)
-  }
-})
-
-onBeforeUnmount(async () => {
-  // await new Promise(async resolve => {
-  //   if (isAnimating.value) {
-  //     const interval = setInterval(() => {
-  //       if (!isAnimating.value) {
-  //         clearInterval(interval)
-  //         resolve(true)
-  //       }
-  //     }, 300)
-  //   }
-  // })
-  // chartInstance.value?.destroy()
-  // chartInstance.value = null //prevent other errors
-})
 </script>
 
 <template>
@@ -302,12 +195,20 @@ onBeforeUnmount(async () => {
     </div>
     <div class="flex-shrink-1">
       <div class="w-full">
-        <div class="max-w-[98%] h-52">
-          <canvas
-            class="-mb-6"
-            ref="chartCanvas"
-          />
-        </div>
+        <BaseChart
+          type="bar"
+          class="!w-[98%] !h-52"
+          customChartClass="-mb-6"
+          :updateChart="updateChart"
+          :chartData="chartData"
+          :chartOptions="chartOptions"
+          :data="kpi"
+          @updateInstance="
+            () => {
+              chartInstance = $event
+            }
+          "
+        />
       </div>
 
       <div

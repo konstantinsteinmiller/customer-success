@@ -11,12 +11,12 @@ import {
 import { pick } from 'lodash'
 import { DASHBOARD_KPI_SORTING_ORDER } from '@/config/constants'
 import { RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
-import KPIComparison from '@/components/KPIComparison.vue'
+import KPIComparison from '@/components/organism/KPIComparison.vue'
 import { useUser } from '@/use/useUser'
 import draggable from 'vuedraggable'
 import { useWidgetOrder } from '@/use/useWidgetOrder'
 import DashboardHeader from '@/components/molecules/DashboardHeader.vue'
-import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
+import MultivalueLineChart from '@/components/organism/MultivalueLineChart.vue'
 import Widget from '@/components/organism/Widget.vue'
 
 const props = defineProps({

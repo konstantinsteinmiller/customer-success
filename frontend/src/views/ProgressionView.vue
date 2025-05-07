@@ -3,7 +3,7 @@ import { Ref, ref } from 'vue'
 import { useAnalytics } from '@/use/useAnalytics'
 import { useUser } from '@/use/useUser'
 import { Company } from '@/../../server/src/types/api'
-import SurveyProgressionDashboard from '@/components/SurveyProgressionDashboard.vue'
+import SurveyProgressionDashboard from '@/components/views/SurveyProgressionDashboard.vue'
 import { isPrinting } from '@/utils/pdf'
 
 const { getProcessData, companiesToSurveyMap } = useAnalytics()

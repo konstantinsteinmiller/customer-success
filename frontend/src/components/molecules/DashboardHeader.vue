@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import CompanySelector from '@/components/companySelector.vue'
+import CompanySelector from '@/components/molecules/CompanySelector.vue'
 import { useUser } from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
 import { isPrinting } from '@/utils/pdf'
+import { computed } from 'vue'
 const { selectedCompaniesRef, selectedCompany } = useUser()
 const { t } = useI18n()
 
@@ -24,6 +25,22 @@ defineProps({
     required: true,
   },
 })
+
+const timeFrame = computed(() => {
+  const currentDate = new Date()
+  const oneYearAgo = new Date()
+  oneYearAgo.setFullYear(currentDate.getFullYear() - 1)
+
+  const currentDateISO = currentDate.toISOString().split('T')[0]
+  const oneYearAgoDateISO = oneYearAgo.toISOString().split('T')[0]
+
+  // const currentDate = new Date()
+  const month = currentDate.toLocaleString('default', { month: 'long' })
+  const year = currentDate.getFullYear()
+  const oneYearAgoMonth = oneYearAgo.toLocaleString('default', { month: 'long' })
+  const oneYearAgoYear = oneYearAgo.getFullYear()
+  return `${oneYearAgoMonth} ${oneYearAgoYear} - ${month} ${year}`
+})
 </script>
 
 <template>
@@ -36,7 +53,7 @@ defineProps({
       <div class="flex items-center justify-between gap-4">
         <div class="w-full justify-self-start self-center">
           <h2 class="text-h5 font-weight-bold break-words wrap-break-word">
-            {{ t(title, { companyName: selectedCompany?.name }) }}
+            {{ t(title, { companyName: selectedCompany?.name, timeFrame: timeFrame }) }}
           </h2>
         </div>
         <div class="flex justify-center items-center">
@@ -68,7 +85,9 @@ defineProps({
 en:
   customerSuccess: "{companyName}'s KPIs"
   comparison: "Survey Comparison for {companyName}"
+  yearlyDevelopment: "{timeFrame} for {companyName}"
 de:
   customerSuccess: "{companyName}'s KPIs"
   comparison: "Umfrage Vergleich für {companyName}"
+  yearlyDevelopment: "{timeFrame} für {companyName}"
 </i18n>

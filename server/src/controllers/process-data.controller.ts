@@ -4,6 +4,7 @@ import { http } from '@/config/api'
 import type { CompaniesListResult, CompanyToSurveyMap } from '@/types/api'
 import { SurveyMetricsService } from '@/services/survey-metrics.service'
 import { CompaniesService } from '@/services/companies.service'
+import MockedSurveyData from '@/mocks/process-data.mock'
 import { cache, cacheKeySurveyMetrics, cacheKeyCompanies } from '@/utils/cache'
 
 const surveyMetricsService = new SurveyMetricsService()

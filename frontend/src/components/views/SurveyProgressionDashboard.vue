@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ComputedRef, onMounted, Ref, ref } from 'vue'
+import { computed, ComputedRef, onMounted, Ref, ref, watch } from 'vue'
 import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/utils/transformData'
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
 import { KPIData, RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
 import { useUser } from '@/use/useUser'
-import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
+import MultivalueLineChart from '@/components/organism/MultivalueLineChart.vue'
 import draggable from 'vuedraggable'
 import { useWidgetOrder } from '@/use/useWidgetOrder'
 import DashboardHeader from '@/components/molecules/DashboardHeader.vue'
@@ -81,16 +81,7 @@ const calculateAvgKPIs = (surveysList: any[]): KPIData => {
 
 const pickedKpisPerSurveyOfRelevantCompaniesList: ComputedRef<RelevantSurveyMetrics[]> = computed(() =>
   relevantCompaniesWithSurveysList.value.map((company: any) => {
-    const filteredToLastYearSurveysList = company.surveysList.filter(survey => {
-      console.log('survey: ', survey)
-      const surveyDate = new Date(survey.endDate)
-      const currentDate = new Date()
-      const oneYearAgo = new Date(currentDate.setFullYear(currentDate.getFullYear() - 1))
-      return surveyDate >= oneYearAgo
-    })
-    const pickedKpisList = calculateAvgKPIs(company.surveysList)
-    console.log('pickedKpisList: ', pickedKpisList)
-    return pickedKpisList
+    return calculateAvgKPIs(company.surveysList)
   })
 )
 
@@ -132,7 +123,7 @@ const filteredProcessDataList = computed(() => {
           companiesAvg: referenceKpisPerSurveyList
             .map((survey: any) => survey[key] || 0)
             .slice(0, showableSurveys.value),
-          stdDev: /*showStdDev.value ? withStdDevPerSurveyList[key]?.slice(0, showableSurveys.value) || [] : */ [],
+          stdDev: showStdDev.value ? withStdDevPerSurveyList[key]?.slice(0, showableSurveys.value) || [] : [],
           id: key,
         }
       }

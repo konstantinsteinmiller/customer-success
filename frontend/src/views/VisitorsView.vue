@@ -2,9 +2,9 @@
 import { useI18n } from 'vue-i18n'
 import { computed, Ref, ref } from 'vue'
 import { useAnalytics } from '@/use/useAnalytics'
-import LineChart from '@/components/LineChart.vue'
+import LineChart from '@/components/molecules/LineChart.vue'
 import { CHART_COLORS } from '@/config/constants'
-import DateSelector from '@/components/DateSelector.vue'
+import DateSelector from '@/components/molecules/DateSelector.vue'
 import { DateRange } from '@/types/api'
 
 const { t } = useI18n()

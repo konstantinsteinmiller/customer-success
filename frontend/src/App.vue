@@ -22,7 +22,6 @@ const logout = async () => {
 }
 
 const activeButton = ref(-1)
-const routeNamesList: string[] = ['customer-success', 'progression', 'companies', 'visitors']
 const menuItems = ref([
   {
     id: 0,
@@ -55,6 +54,7 @@ const menuItems = ref([
     action: () => router.push({ name: 'visitors' }),
   },
 ])
+const routeNamesList: string[] = ['customer-success', 'progression', 'year-development', 'companies', 'visitors']
 
 const userItems = ref([
   {

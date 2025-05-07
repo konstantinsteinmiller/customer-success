@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue'
 import { useAnalytics } from '@/use/useAnalytics'
-import DateSelector from '@/components/DateSelector.vue'
-import ProcessDataDashboard from '@/components/ProcessDataDashboard.vue'
+import DateSelector from '@/components/molecules/DateSelector.vue'
+import ProcessDataDashboard from '@/components/views/ProcessDataDashboard.vue'
 import { useUser } from '@/use/useUser'
 import { Company } from '@/../../server/src/types/api'
 import { isPrinting } from '@/utils/pdf'

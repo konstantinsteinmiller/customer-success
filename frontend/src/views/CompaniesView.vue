@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAnalytics } from '@/use/useAnalytics'
-import SelectRelevantCompanies from '@/components/SelectRelevantCompanies.vue'
+import SelectRelevantCompanies from '@/components/views/SelectRelevantCompanies.vue'
 
 const { getProcessData, companiesToSurveyMap, isLoadingProcessData: isLoading } = useAnalytics()
 

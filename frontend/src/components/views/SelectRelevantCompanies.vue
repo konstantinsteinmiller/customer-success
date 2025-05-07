@@ -5,7 +5,7 @@ import { RelevantSurveyMetrics } from '@/types/SurveyMetrics'
 import { CompanyWithSurveys } from '@/../../server/types/api'
 import { transformSurveyData } from '@/utils/transformData'
 import { useUser } from '@/use/useUser'
-import CompanySelector from '@/components/companySelector.vue'
+import CompanySelector from '@/components/molecules/CompanySelector.vue'
 
 const { t } = useI18n()
 const { isLoadingSelectedCompanies, selectedCompaniesList, isLoadingSaveSelectedCompanies, saveRelevantCompanies } =

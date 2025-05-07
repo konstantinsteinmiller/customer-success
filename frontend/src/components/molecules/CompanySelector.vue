@@ -2,7 +2,7 @@
 import { computed, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { VSelect } from 'vuetify/components'
-import { Company } from '@/../../server/src/types/api'
+import { Company } from 'server/src/types/api'
 import { useUser } from '@/use/useUser'
 import { isPrinting } from '@/utils/pdf'
 

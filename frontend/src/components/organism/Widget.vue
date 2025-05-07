@@ -41,7 +41,7 @@ const isGreyedOut = computed(() => {
 <template>
   <v-card
     :key="kpi"
-    class="basis-[100%] sm:basis-[49%] md:basis-[49%] xl:basis-[31%] flex-grow"
+    class="basis-[100%] sm:basis-[49%] md:basis-[49%] xl:basis-[31%] flex-grow hover:cursor-grab"
     :class="{
       'v-card__loader--hidden': !isLoading,
       [`card-${kpi}`]: true,

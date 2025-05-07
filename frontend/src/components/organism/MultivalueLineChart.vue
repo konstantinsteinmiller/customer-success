@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, Ref, useTemplateRef } from 'vue'
+import { ref, Ref } from 'vue'
 import {
   Chart,
   Tooltip,
@@ -13,10 +13,10 @@ import {
 } from 'chart.js'
 import { CHART_COLORS } from '@/config/constants'
 import { useI18n } from 'vue-i18n'
-import { deepCompare } from '@/utils/functions'
 import { isKpiPercentValue } from '@/utils/analytics'
 import { useAnalytics } from '@/use/useAnalytics'
 import { useRoute } from 'vue-router'
+import BaseChart from '@/components/atoms/BaseChart.vue'
 
 Chart.register(LineController, Tooltip, LineElement, PointElement, LinearScale, CategoryScale, Legend, Filler)
 
@@ -55,7 +55,6 @@ const props = defineProps({
   },
 })
 
-const chartCanvas = useTemplateRef<HTMLCanvasElement | null>('chartCanvas')
 const chartInstance: Ref<Chart | null> = ref(null)
 const isAnimating = ref(false) // Ref to track animation state
 isAnimatingMap[props.id] = true
@@ -166,91 +165,8 @@ const updateChart = () => {
     chartData.datasets[2].data = []
     chartData.datasets[3].data = []
   }
-  // chartInstance.value?.update('none')
   emit('update')
 }
-
-let startTime = performance.now()
-let hasUpdatedChart = false
-watch(
-  () => props.data,
-  async (newValue, oldValue) => {
-    const hasDataChanged = deepCompare(newValue, oldValue).changed || false
-    //
-    // await new Promise(resolve => {
-    //   if (isAnimating.value) {
-    //     setTimeout(() => {
-    //       resolve(true)
-    //     }, 1000)
-    //   } else {
-    //     resolve(false)
-    //   }
-    // })
-
-    if (hasDataChanged && chartInstance.value) {
-      hasUpdatedChart = false
-      startTime = performance.now()
-      updateChart()
-      recreateChart()
-    }
-  },
-  { deep: true }
-)
-
-const recreateChart = () => {
-  setTimeout(() => {
-    if (hasUpdatedChart) return
-    const endTime = performance.now()
-    const ctx = chartCanvas.value?.getContext('2d')
-    if (endTime - startTime < 2000) {
-      recreateChart()
-      return
-    }
-    if (!ctx?.save) return
-    chartInstance.value?.destroy()
-    chartInstance.value = null
-    setTimeout(() => {
-      setupChartInstance()
-    })
-    hasUpdatedChart = true
-  }, 300)
-}
-
-const setupChartInstance = (ctx?: any) => {
-  ctx = ctx || chartCanvas.value?.getContext('2d')
-  chartInstance.value = new Chart(ctx, {
-    type: 'line',
-    data: chartData,
-    options: chartOptions,
-  })
-}
-
-onMounted(() => {
-  const ctx = chartCanvas.value?.getContext('2d')
-
-  // Initial update if data is already present on mount
-  updateChart()
-
-  if (ctx) {
-    setupChartInstance(ctx)
-  }
-})
-
-onBeforeUnmount(async () => {
-  // /* await animation of the created instance before attempting destruction */
-  // await new Promise(async resolve => {
-  //   if (isAnimating.value) {
-  //     const interval = setInterval(() => {
-  //       if (!isAnimating.value) {
-  //         clearInterval(interval)
-  //         resolve(true)
-  //       }
-  //     }, 300)
-  //   }
-  // })
-  // chartInstance.value?.destroy()
-  // chartInstance.value = null //prevent other errors
-})
 </script>
 
 <template>
@@ -264,12 +180,21 @@ onBeforeUnmount(async () => {
       >{{ t(props.id) }}</v-card-title
     >
   </div>
-  <div class="h-80 relative">
-    <canvas
-      class="absolute top-0 left-0"
-      ref="chartCanvas"
-    />
-  </div>
+
+  <BaseChart
+    type="line"
+    class="h-80 relative"
+    customChartClass="absolute top-0 left-0"
+    :updateChart="updateChart"
+    :chartData="chartData"
+    :chartOptions="chartOptions"
+    :data="data"
+    @updateInstance="
+      () => {
+        chartInstance = $event
+      }
+    "
+  />
 </template>
 
 <i18n>

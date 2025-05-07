@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ComputedRef, onMounted, Ref, ref, watch } from 'vue'
+import { computed, ComputedRef, onMounted, Ref, ref } from 'vue'
 import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/utils/transformData'
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
 import { KPIData, RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
 import { useUser } from '@/use/useUser'
-import MultivalueLineChart from '@/components/MultivalueLineChart.vue'
+import MultivalueLineChart from '@/components/organism/MultivalueLineChart.vue'
 import draggable from 'vuedraggable'
 import { useWidgetOrder } from '@/use/useWidgetOrder'
 import DashboardHeader from '@/components/molecules/DashboardHeader.vue'
@@ -81,7 +81,16 @@ const calculateAvgKPIs = (surveysList: any[]): KPIData => {
 
 const pickedKpisPerSurveyOfRelevantCompaniesList: ComputedRef<RelevantSurveyMetrics[]> = computed(() =>
   relevantCompaniesWithSurveysList.value.map((company: any) => {
-    return calculateAvgKPIs(company.surveysList)
+    const filteredToLastYearSurveysList = company.surveysList.filter((survey: KPIData) => {
+      const surveyEndDate = new Date(survey.endDate)
+      const currentDate = new Date()
+      const oneYearAgo = new Date()
+      oneYearAgo.setFullYear(currentDate.getFullYear() - 1)
+      return surveyEndDate >= oneYearAgo && surveyEndDate <= currentDate
+    })
+
+    const pickedKpisList = calculateAvgKPIs(filteredToLastYearSurveysList)
+    return pickedKpisList
   })
 )
 
@@ -159,7 +168,7 @@ const { widgetsList } = useWidgetOrder(filteredProcessDataList, 'progressionWidg
 
 <template>
   <DashboardHeader
-    title="comparison"
+    title="yearlyDevelopment"
     :isLoadingChart="isLoadingChart"
     :showStdDev="showStdDev"
     :onToggleStdDev="onToggleStdDev"

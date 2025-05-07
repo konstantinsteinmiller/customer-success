@@ -27,6 +27,8 @@
 - [x] fix overlap header with stddev button
 - [x] remove buttons from print
 - [x] deselect widget from print view
+- [x] fix routing
+- [x] refactor destruction and reacreation of charts into BaseChart component for encapsulation
 - [ ] Jahres chart vergleich aller Umfragen aller companies
 
 
