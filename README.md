@@ -6,21 +6,6 @@ includes:
 - allows to export the charts as pdf to share with customers
 - uses node.js server for user session management and user related data
 
-## Project Setup
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-```sh
-pnpm dev
-```
-
-### Type-Check, Compile and Minify for Production
-```sh
-pnpm build
-```
-
 # Preview
 ![bar charts kpi comparison](https://github.com/konstantinsteinmiller/customer-success/blob/master/frontend/src/assets/documentation/bar-charts-kpi-comparison.png)
 
