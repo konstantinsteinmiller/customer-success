@@ -15,7 +15,6 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
 
   // first: Check the in-memory cache
   const cachedData: CompanyToSurveyMap | undefined = cache.get<CompanyToSurveyMap>(cacheKeySurveyMetrics)
-  console.log('cachedData: ', cachedData)
   if (cachedData) {
     // console.log('Serving from cache', cachedData)
     companyToSurveyMap = cachedData
@@ -23,7 +22,6 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
 
   // second: Check MongoDB for the latest data
   const dbData: CompanyToSurveyMap | null = await surveyMetricsService.getSurveyMetrics()
-  console.log('dbData: ', dbData)
   if (!cachedData && dbData) {
     // console.log('Serving from MongoDB', dbData)
     cache.set(cacheKeySurveyMetrics, dbData) // Update the cache
@@ -32,7 +30,6 @@ export const getProcessData = async (req: Request, res: Response, next: NextFunc
 
   // last: fetch data from the API
   if (!companyToSurveyMap || !Object.keys(companyToSurveyMap)?.length) {
-    console.log('companyToSurveyMap: ', companyToSurveyMap)
     try {
       /* fetch all companies */
       const { data: companies }: CompaniesListResult = await new Promise((resolve, reject) => {
