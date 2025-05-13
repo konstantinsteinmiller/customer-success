@@ -1,7 +1,7 @@
 export default {
-  '21358reg465917269472': {
+  'e88c13f0-fafd-4026-b7dd-d6bb18874f3c': {
+    id: 'e88c13f0-fafd-4026-b7dd-d6bb18874f3c',
     name: 'ACME Corp 1',
-    id: '21358reg465917269472',
     surveysList: [
       {
         surveyNr: 1,
@@ -159,9 +159,9 @@ export default {
       },
     ],
   },
-  '31349bre187255972117': {
+  '9bfa6881-6d61-4411-822a-5b790970ced6': {
+    id: '9bfa6881-6d61-4411-822a-5b790970ced6',
     name: 'ACME Corp 2',
-    id: '31349bre187255972117',
     surveysList: [
       {
         surveyNr: 1,
@@ -341,9 +341,9 @@ export default {
       },
     ],
   },
-  '36445geo139157321333': {
+  '12c9bc20-ad7f-4ee1-bf1e-fc0bc728473c': {
+    id: '12c9bc20-ad7f-4ee1-bf1e-fc0bc728473c',
     name: 'ACME Corp 3',
-    id: '36445geo139157321333',
     surveysList: [
       {
         surveyNr: 1,
@@ -457,9 +457,9 @@ export default {
       },
     ],
   },
-  '37121per159542365300': {
+  '6b97e215-56d0-49c7-b879-ca2bd7ff650e': {
+    id: '6b97e215-56d0-49c7-b879-ca2bd7ff650e',
     name: 'ACME Corp 4',
-    id: '37121per159542365300',
     surveysList: [
       {
         surveyNr: 1,
@@ -485,9 +485,9 @@ export default {
       },
     ],
   },
-  '38411rit340734284334': {
+  'd3ed1c1a-4951-41a6-a4ac-4e19223b64a3': {
+    id: 'd3ed1c1a-4951-41a6-a4ac-4e19223b64a3',
     name: 'ACME Corp 5',
-    id: '38411rit340734284334',
     surveysList: [
       {
         surveyNr: 1,
@@ -623,9 +623,9 @@ export default {
       },
     ],
   },
-  '38592asp309115259283': {
+  'd3fe4c25-05f6-442d-8c14-038a6260004e': {
+    id: 'd3fe4c25-05f6-442d-8c14-038a6260004e',
     name: 'ACME Corp 6',
-    id: '38592asp309115259283',
     surveysList: [
       {
         surveyNr: 1,
@@ -739,9 +739,9 @@ export default {
       },
     ],
   },
-  '3YbECzsMppC27Pmeb237': {
+  '29115c44-c3e7-4f0e-8233-26dfae6f0a1e': {
+    id: '29115c44-c3e7-4f0e-8233-26dfae6f0a1e',
     name: 'ACME Corp 7',
-    id: '3YbECzsMppC27Pmeb237',
     surveysList: [
       {
         surveyNr: 1,
@@ -2241,9 +2241,9 @@ export default {
       },
     ],
   },
-  '47808pos255873195774': {
+  '596d212a-ff77-409a-9193-546de3d93a46': {
+    id: '596d212a-ff77-409a-9193-546de3d93a46',
     name: 'ACME Corp 8',
-    id: '47808pos255873195774',
     surveysList: [
       {
         surveyNr: 1,
@@ -2379,14 +2379,9 @@ export default {
       },
     ],
   },
-  '53237tag13524381629': {
-    name: 'ACME Corp 9',
-    id: '53237tag13524381629',
-    surveysList: [],
-  },
-  '54119nid242298514493': {
+  '5d15473c-99e0-4a5e-89d2-15df2c226fd2': {
+    id: '5d15473c-99e0-4a5e-89d2-15df2c226fd2',
     name: 'ACME Corp 10',
-    id: '54119nid242298514493',
     surveysList: [
       {
         surveyNr: 1,
@@ -2720,9 +2715,9 @@ export default {
       },
     ],
   },
-  '55649gws359561717373': {
+  '58186625-8fda-4abf-8884-ad425a0990b2': {
+    id: '58186625-8fda-4abf-8884-ad425a0990b2',
     name: 'ACME Corp 11',
-    id: '55649gws359561717373',
     surveysList: [
       {
         surveyNr: 1,
@@ -2770,9 +2765,9 @@ export default {
       },
     ],
   },
-  '63308tip851575972840': {
+  '1ac4da5e-99e3-4037-87ee-e7e4ed16861b': {
+    id: '1ac4da5e-99e3-4037-87ee-e7e4ed16861b',
     name: 'ACME Corp 12',
-    id: '63308tip851575972840',
     surveysList: [
       {
         surveyNr: 1,
@@ -2798,9 +2793,9 @@ export default {
       },
     ],
   },
-  '68767car414090293868': {
+  '6ce4baba-7b07-4f02-a467-9b347a702492': {
+    id: '6ce4baba-7b07-4f02-a467-9b347a702492',
     name: 'ACME Corp 13',
-    id: '68767car414090293868',
     surveysList: [
       {
         surveyNr: 1,
@@ -2870,9 +2865,9 @@ export default {
       },
     ],
   },
-  '69493swi532328968487': {
+  'eef8d77a-f956-4c48-9b65-5fda9109ffbc': {
+    id: 'eef8d77a-f956-4c48-9b65-5fda9109ffbc',
     name: 'ACME Corp 14',
-    id: '69493swi532328968487',
     surveysList: [
       {
         surveyNr: 1,
@@ -2898,9 +2893,9 @@ export default {
       },
     ],
   },
-  '74411jes683127540537': {
+  'bf471bb2-6e5e-4e31-aae0-3522abad3cae': {
+    id: 'bf471bb2-6e5e-4e31-aae0-3522abad3cae',
     name: 'ACME Corp 15',
-    id: '74411jes683127540537',
     surveysList: [
       {
         surveyNr: 1,
@@ -3784,9 +3779,9 @@ export default {
       },
     ],
   },
-  '85916fat786585735465': {
+  '64ec06c1-aa62-42c6-be3a-40e81b4df81b': {
+    id: '64ec06c1-aa62-42c6-be3a-40e81b4df81b',
     name: 'ACME Corp 16',
-    id: '85916fat786585735465',
     surveysList: [
       {
         surveyNr: 1,
@@ -3944,9 +3939,9 @@ export default {
       },
     ],
   },
-  '96500ewz390394165851': {
+  'b92c4030-260d-4cc5-9509-dd4b12448c16': {
+    id: 'b92c4030-260d-4cc5-9509-dd4b12448c16',
     name: 'ACME Corp 17',
-    id: '96500ewz390394165851',
     surveysList: [
       {
         surveyNr: 1,
@@ -4126,9 +4121,9 @@ export default {
       },
     ],
   },
-  Q5tvHToYko5urpnLH881: {
+  '39da5b00-6d81-4481-b0b5-feaec8fc0039': {
+    id: '39da5b00-6d81-4481-b0b5-feaec8fc0039',
     name: 'ACME Corp 18',
-    id: 'Q5tvHToYko5urpnLH881',
     surveysList: [
       {
         surveyNr: 1,
@@ -4748,14 +4743,9 @@ export default {
       },
     ],
   },
-  questioncatalog982: {
-    name: 'ACME Corp 19',
-    id: 'questioncatalog982',
-    surveysList: [],
-  },
-  '77446VBR612467247997': {
+  'aaca98c2-bfee-411b-8d9c-f48a36945f24': {
+    id: 'aaca98c2-bfee-411b-8d9c-f48a36945f24',
     name: 'ACME Corp 20',
-    id: '77446VBR612467247997',
     surveysList: [
       {
         surveyNr: 1,
@@ -4825,9 +4815,9 @@ export default {
       },
     ],
   },
-  '82838tag872290585218': {
+  '2af9c887-286b-4b4f-a394-88014136c770': {
+    id: '2af9c887-286b-4b4f-a394-88014136c770',
     name: 'ACME Corp 21',
-    id: '82838tag872290585218',
     surveysList: [
       {
         surveyNr: 1,
@@ -4853,9 +4843,9 @@ export default {
       },
     ],
   },
-  '92015ugz578994505251': {
+  'e320c381-dcad-4196-b1de-697e3225a79b': {
+    id: 'e320c381-dcad-4196-b1de-697e3225a79b',
     name: 'ACME Corp 22',
-    id: '92015ugz578994505251',
     surveysList: [
       {
         surveyNr: 1,
@@ -4925,9 +4915,9 @@ export default {
       },
     ],
   },
-  '34805saw645338159779': {
+  '81df1e3b-bb60-4f24-86be-a4c21384124e': {
+    id: '81df1e3b-bb60-4f24-86be-a4c21384124e',
     name: 'ACME Corp 23',
-    id: '34805saw645338159779',
     surveysList: [
       {
         surveyNr: 1,
@@ -5019,9 +5009,9 @@ export default {
       },
     ],
   },
-  '24097stm769290763780': {
+  'bbc695a9-7c10-44a9-a7d1-dea0f5489eda': {
+    id: 'bbc695a9-7c10-44a9-a7d1-dea0f5489eda',
     name: 'ACME Corp 24',
-    id: '24097stm769290763780',
     surveysList: [
       {
         surveyNr: 1,
@@ -5047,9 +5037,9 @@ export default {
       },
     ],
   },
-  '22219reg256520476851': {
+  '00db62f9-45ef-438a-aaa2-842f668e37f7': {
+    id: '00db62f9-45ef-438a-aaa2-842f668e37f7',
     name: 'ACME Corp 25',
-    id: '22219reg256520476851',
     surveysList: [
       {
         surveyNr: 1,
@@ -5493,9 +5483,9 @@ export default {
       },
     ],
   },
-  '81812kpt446687047960': {
+  '5bdd70f4-7dd6-4cfc-8972-4378950bb2f7': {
+    id: '5bdd70f4-7dd6-4cfc-8972-4378950bb2f7',
     name: 'ACME Corp 26',
-    id: '81812kpt446687047960',
     surveysList: [
       {
         surveyNr: 1,
@@ -5565,9 +5555,9 @@ export default {
       },
     ],
   },
-  '34938cli991681186951': {
+  '124df2ad-fef6-4600-b346-757971336b8b': {
+    id: '124df2ad-fef6-4600-b346-757971336b8b',
     name: 'ACME Corp 27',
-    id: '34938cli991681186951',
     surveysList: [
       {
         surveyNr: 1,
@@ -5615,9 +5605,9 @@ export default {
       },
     ],
   },
-  '80070sen243729353419': {
+  '5a97cc9e-cc52-4317-8fbf-2b43fed2abe2': {
+    id: '5a97cc9e-cc52-4317-8fbf-2b43fed2abe2',
     name: 'ACME Corp 28',
-    id: '80070sen243729353419',
     surveysList: [
       {
         surveyNr: 1,
@@ -5643,14 +5633,9 @@ export default {
       },
     ],
   },
-  '37121per159542365_099840': {
-    name: 'ACME Corp 29',
-    id: '37121per159542365_099840',
-    surveysList: [],
-  },
-  '95299FIB589336828844': {
+  '4c74db04-5215-4c59-890a-1f8682d1493f': {
+    id: '4c74db04-5215-4c59-890a-1f8682d1493f',
     name: 'ACME Corp 30',
-    id: '95299FIB589336828844',
     surveysList: [
       {
         surveyNr: 1,
@@ -5698,9 +5683,9 @@ export default {
       },
     ],
   },
-  '95615sfr320742328813': {
+  '00ee3e27-ad82-44f2-8d46-2db9271de4b4': {
+    id: '00ee3e27-ad82-44f2-8d46-2db9271de4b4',
     name: 'ACME Corp 31',
-    id: '95615sfr320742328813',
     surveysList: [
       {
         surveyNr: 1,
@@ -5858,19 +5843,9 @@ export default {
       },
     ],
   },
-  questionCatalogV2217: {
-    name: 'ACME Corp 32',
-    id: 'questionCatalogV2217',
-    surveysList: [],
-  },
-  '29941tag867528652811': {
-    name: 'ACME Corp 33',
-    id: '29941tag867528652811',
-    surveysList: [],
-  },
-  '39507vkb208395148936': {
+  '6079f8f0-66c5-446f-bdc2-94d06d623d87': {
+    id: '6079f8f0-66c5-446f-bdc2-94d06d623d87',
     name: 'ACME Corp 34',
-    id: '39507vkb208395148936',
     surveysList: [
       {
         surveyNr: 1,
@@ -5896,9 +5871,9 @@ export default {
       },
     ],
   },
-  '23213tam223139668147': {
+  'c66895b1-b97a-40f6-bd29-8e3b3984ab60': {
+    id: 'c66895b1-b97a-40f6-bd29-8e3b3984ab60',
     name: 'ACME Corp 35',
-    id: '23213tam223139668147',
     surveysList: [
       {
         surveyNr: 1,
@@ -6012,9 +5987,9 @@ export default {
       },
     ],
   },
-  '91185min1347584964': {
+  'ecde5261-f8a2-4036-b05a-4689211535e3': {
+    id: 'ecde5261-f8a2-4036-b05a-4689211535e3',
     name: 'ACME Corp 36',
-    id: '91185min1347584964',
     surveysList: [
       {
         surveyNr: 1,
@@ -6194,9 +6169,9 @@ export default {
       },
     ],
   },
-  '22708gol200809573193': {
+  '9b1e7bf4-a774-4236-97d5-adabc07916a2': {
+    id: '9b1e7bf4-a774-4236-97d5-adabc07916a2',
     name: 'ACME Corp 37',
-    id: '22708gol200809573193',
     surveysList: [
       {
         surveyNr: 1,
@@ -6332,9 +6307,9 @@ export default {
       },
     ],
   },
-  '15328txg42812391572': {
+  '65ce80bc-bd30-459e-8bc0-6266230e91d4': {
+    id: '65ce80bc-bd30-459e-8bc0-6266230e91d4',
     name: 'ACME Corp 38',
-    id: '15328txg42812391572',
     surveysList: [
       {
         surveyNr: 1,
@@ -6492,9 +6467,9 @@ export default {
       },
     ],
   },
-  '22801SWI182608558622': {
+  '61fdbe8e-5896-44b0-a834-7d54ae10f8ec': {
+    id: '61fdbe8e-5896-44b0-a834-7d54ae10f8ec',
     name: 'ACME Corp 39',
-    id: '22801SWI182608558622',
     surveysList: [
       {
         surveyNr: 1,
@@ -6586,19 +6561,9 @@ export default {
       },
     ],
   },
-  '6628b91875c9bd17d36d585b636': {
-    name: 'ACME Corp 40',
-    id: '6628b91875c9bd17d36d585b636',
-    surveysList: [],
-  },
-  '66541c604b3851664503f7b1822': {
-    name: 'ACME Corp 41',
-    id: '66541c604b3851664503f7b1822',
-    surveysList: [],
-  },
-  '6658cf4ff0fba5297a938556812': {
+  '7051d0d3-6f38-4a8d-b8dc-fdd7ae67576d': {
+    id: '7051d0d3-6f38-4a8d-b8dc-fdd7ae67576d',
     name: 'ACME Corp 42',
-    id: '6658cf4ff0fba5297a938556812',
     surveysList: [
       {
         surveyNr: 1,
@@ -6646,9 +6611,9 @@ export default {
       },
     ],
   },
-  '668bf7fd0c65577838e917a4298': {
+  '7fec10bf-6257-427c-a236-68ea6234fefa': {
+    id: '7fec10bf-6257-427c-a236-68ea6234fefa',
     name: 'ACME Corp 43',
-    id: '668bf7fd0c65577838e917a4298',
     surveysList: [
       {
         surveyNr: 1,
@@ -6674,9 +6639,9 @@ export default {
       },
     ],
   },
-  '71712tag298960826569': {
+  '25a39c40-cfd9-4ae4-a429-f01f4b4c7e4d': {
+    id: '25a39c40-cfd9-4ae4-a429-f01f4b4c7e4d',
     name: 'ACME Corp 44',
-    id: '71712tag298960826569',
     surveysList: [
       {
         surveyNr: 1,
@@ -6702,14 +6667,9 @@ export default {
       },
     ],
   },
-  '89267tag241590229305': {
-    name: 'ACME Corp 45',
-    id: '89267tag241590229305',
-    surveysList: [],
-  },
-  '81347LuZ357359634560': {
+  '3eba71c5-6a8c-403a-9918-205eedffcbeb': {
+    id: '3eba71c5-6a8c-403a-9918-205eedffcbeb',
     name: 'ACME Corp 46',
-    id: '81347LuZ357359634560',
     surveysList: [
       {
         surveyNr: 1,
@@ -6735,9 +6695,9 @@ export default {
       },
     ],
   },
-  '81319LuB737058908340': {
+  'ef1c8eb7-29ca-4caa-bac2-2aa1fd2b5b1d': {
+    id: 'ef1c8eb7-29ca-4caa-bac2-2aa1fd2b5b1d',
     name: 'ACME Corp 47',
-    id: '81319LuB737058908340',
     surveysList: [
       {
         surveyNr: 1,
@@ -6763,9 +6723,9 @@ export default {
       },
     ],
   },
-  '48189tag705164411449': {
+  '42ac796c-f4d4-407d-a1e1-d241d99fd4f9': {
+    id: '42ac796c-f4d4-407d-a1e1-d241d99fd4f9',
     name: 'ACME Corp 48',
-    id: '48189tag705164411449',
     surveysList: [
       {
         surveyNr: 1,
@@ -6791,9 +6751,9 @@ export default {
       },
     ],
   },
-  '39650LuS746414790863': {
+  'fb670e3d-4751-4ed0-886b-1a2f5dab784b': {
+    id: 'fb670e3d-4751-4ed0-886b-1a2f5dab784b',
     name: 'ACME Corp 49',
-    id: '39650LuS746414790863',
     surveysList: [
       {
         surveyNr: 1,
@@ -6819,9 +6779,9 @@ export default {
       },
     ],
   },
-  '58353LBB563999838577': {
+  '8ced775c-2914-4941-9c82-2bb9f6e46d4d': {
+    id: '8ced775c-2914-4941-9c82-2bb9f6e46d4d',
     name: 'ACME Corp 50',
-    id: '58353LBB563999838577',
     surveysList: [
       {
         surveyNr: 1,
@@ -6847,9 +6807,9 @@ export default {
       },
     ],
   },
-  '84318bro741604909903': {
+  '2451cae7-9fff-485c-b662-cecf21257692': {
+    id: '2451cae7-9fff-485c-b662-cecf21257692',
     name: 'ACME Corp 51',
-    id: '84318bro741604909903',
     surveysList: [
       {
         surveyNr: 1,
@@ -6941,9 +6901,9 @@ export default {
       },
     ],
   },
-  '75925pof181912569114': {
+  '08aeafce-82ed-4174-8c5b-64870140c78c': {
+    id: '08aeafce-82ed-4174-8c5b-64870140c78c',
     name: 'ACME Corp 52',
-    id: '75925pof181912569114',
     surveysList: [
       {
         surveyNr: 1,
@@ -6991,9 +6951,9 @@ export default {
       },
     ],
   },
-  '14055for495089302860': {
+  '161edf05-73eb-408f-b332-fe849a9f8b7a': {
+    id: '161edf05-73eb-408f-b332-fe849a9f8b7a',
     name: 'ACME Corp 53',
-    id: '14055for495089302860',
     surveysList: [
       {
         surveyNr: 1,
@@ -7085,14 +7045,9 @@ export default {
       },
     ],
   },
-  '671222b7ff98fb6a8823cf8375': {
-    name: 'ACME Corp 54',
-    id: '671222b7ff98fb6a8823cf8375',
-    surveysList: [],
-  },
-  '672b382185e3776a644e339d640': {
+  '35c541f7-de90-4e77-8330-1f14bb1c1573': {
+    id: '35c541f7-de90-4e77-8330-1f14bb1c1573',
     name: 'ACME Corp 55',
-    id: '672b382185e3776a644e339d640',
     surveysList: [
       {
         surveyNr: 1,
@@ -7118,9 +7073,9 @@ export default {
       },
     ],
   },
-  '651545c98fbb90562f4c065c482': {
+  '0fefcad3-6296-4269-ba76-1b7a10b11a64': {
+    id: '0fefcad3-6296-4269-ba76-1b7a10b11a64',
     name: 'ACME Corp 56',
-    id: '651545c98fbb90562f4c065c482',
     surveysList: [
       {
         surveyNr: 1,
@@ -7168,9 +7123,9 @@ export default {
       },
     ],
   },
-  '64983brl304366969510': {
+  'fda7caa8-0570-47bf-9e6c-cb62747f2f92': {
+    id: 'fda7caa8-0570-47bf-9e6c-cb62747f2f92',
     name: 'ACME Corp 57',
-    id: '64983brl304366969510',
     surveysList: [
       {
         surveyNr: 1,
@@ -7372,9 +7327,9 @@ export default {
       },
     ],
   },
-  '26550tag404031132354': {
+  '17229276-b3dd-41a2-8096-b255371d1759': {
+    id: '17229276-b3dd-41a2-8096-b255371d1759',
     name: 'ACME Corp 58',
-    id: '26550tag404031132354',
     surveysList: [
       {
         surveyNr: 1,
@@ -7422,9 +7377,9 @@ export default {
       },
     ],
   },
-  '52780bvg479791730598': {
+  '21b56e0a-4706-4597-8641-5fe7ae53670b': {
+    id: '21b56e0a-4706-4597-8641-5fe7ae53670b',
     name: 'ACME Corp 59',
-    id: '52780bvg479791730598',
     surveysList: [
       {
         surveyNr: 1,
@@ -7450,14 +7405,9 @@ export default {
       },
     ],
   },
-  '672393c21d95257d39296bbf338': {
-    name: 'ACME Corp 60',
-    id: '672393c21d95257d39296bbf338',
-    surveysList: [],
-  },
-  '60507reg138866242313': {
+  'd4af07a2-e90a-4333-8922-202dbb2894f7': {
+    id: 'd4af07a2-e90a-4333-8922-202dbb2894f7',
     name: 'ACME Corp 61',
-    id: '60507reg138866242313',
     surveysList: [
       {
         surveyNr: 1,
@@ -7483,9 +7433,9 @@ export default {
       },
     ],
   },
-  '678e1d089da97a57f203dbfc104': {
+  '0e2dbc89-457d-4b35-abd7-570877d18fcf': {
+    id: '0e2dbc89-457d-4b35-abd7-570877d18fcf',
     name: 'ACME Corp 62',
-    id: '678e1d089da97a57f203dbfc104',
     surveysList: [
       {
         surveyNr: 1,
@@ -7511,9 +7461,9 @@ export default {
       },
     ],
   },
-  '95462pks10976281352': {
+  '53f73fee-5d48-4db9-b0de-8e7238d6186b': {
+    id: '53f73fee-5d48-4db9-b0de-8e7238d6186b',
     name: 'ACME Corp 63',
-    id: '95462pks10976281352',
     surveysList: [
       {
         surveyNr: 1,
@@ -7671,9 +7621,9 @@ export default {
       },
     ],
   },
-  '95444atp856638338307': {
+  '3827497c-73ea-4337-84bb-13531cc84145': {
+    id: '3827497c-73ea-4337-84bb-13531cc84145',
     name: 'ACME Corp 64',
-    id: '95444atp856638338307',
     surveysList: [
       {
         surveyNr: 1,
@@ -7721,9 +7671,9 @@ export default {
       },
     ],
   },
-  '84508reg345746906801': {
+  '91aff4ff-7e73-4567-a4ed-07e1b2de67f0': {
+    id: '91aff4ff-7e73-4567-a4ed-07e1b2de67f0',
     name: 'ACME Corp 65',
-    id: '84508reg345746906801',
     surveysList: [
       {
         surveyNr: 1,
@@ -7749,9 +7699,9 @@ export default {
       },
     ],
   },
-  '93035reg490429251615': {
+  '76c92205-068e-47ef-a0e6-d6beeb472661': {
+    id: '76c92205-068e-47ef-a0e6-d6beeb472661',
     name: 'ACME Corp 66',
-    id: '93035reg490429251615',
     surveysList: [
       {
         surveyNr: 1,
@@ -7777,9 +7727,9 @@ export default {
       },
     ],
   },
-  '37509reg280673901144': {
+  '77bad382-1e4d-42c4-8895-92eb28d67e7b': {
+    id: '77bad382-1e4d-42c4-8895-92eb28d67e7b',
     name: 'ACME Corp 67',
-    id: '37509reg280673901144',
     surveysList: [
       {
         surveyNr: 1,
@@ -7805,9 +7755,9 @@ export default {
       },
     ],
   },
-  '14456reg109026871685': {
+  '5aaf6f63-e330-45e0-b5e1-9c77ab02f75b': {
+    id: '5aaf6f63-e330-45e0-b5e1-9c77ab02f75b',
     name: 'ACME Corp 68',
-    id: '14456reg109026871685',
     surveysList: [
       {
         surveyNr: 1,
@@ -7833,9 +7783,9 @@ export default {
       },
     ],
   },
-  '16043reg778413060997': {
+  '65d1a559-ff19-49a2-a999-9bf305b184e6': {
+    id: '65d1a559-ff19-49a2-a999-9bf305b184e6',
     name: 'ACME Corp 69',
-    id: '16043reg778413060997',
     surveysList: [
       {
         surveyNr: 1,
@@ -7883,9 +7833,9 @@ export default {
       },
     ],
   },
-  '61950d444bc1bf215e448f3c10066': {
+  '9a6ed71f-d82b-4645-b8cc-d5b1508f697c': {
+    id: '9a6ed71f-d82b-4645-b8cc-d5b1508f697c',
     name: 'ACME Corp 70',
-    id: '61950d444bc1bf215e448f3c10066',
     surveysList: [
       {
         surveyNr: 1,
@@ -8131,9 +8081,9 @@ export default {
       },
     ],
   },
-  '76163LuA818299967253': {
+  'dde0ae0c-2a8e-4962-a264-bdeedbfa2f57': {
+    id: 'dde0ae0c-2a8e-4962-a264-bdeedbfa2f57',
     name: 'ACME Corp 71',
-    id: '76163LuA818299967253',
     surveysList: [
       {
         surveyNr: 1,
@@ -8159,9 +8109,9 @@ export default {
       },
     ],
   },
-  '66b9ceb5292bc270c1cfc52f426': {
+  '608f251e-517d-400a-976c-ab4065cf6e63': {
+    id: '608f251e-517d-400a-976c-ab4065cf6e63',
     name: 'ACME Corp 72',
-    id: '66b9ceb5292bc270c1cfc52f426',
     surveysList: [
       {
         surveyNr: 1,
@@ -8187,9 +8137,9 @@ export default {
       },
     ],
   },
-  '18603srg799469132140': {
+  'aa2325ce-77da-4a1a-a21e-6c584a8ae70d': {
+    id: 'aa2325ce-77da-4a1a-a21e-6c584a8ae70d',
     name: 'ACME Corp 73',
-    id: '18603srg799469132140',
     surveysList: [
       {
         surveyNr: 1,
@@ -8347,14 +8297,9 @@ export default {
       },
     ],
   },
-  '79912reg686323732712': {
-    name: 'ACME Corp 74',
-    id: '79912reg686323732712',
-    surveysList: [],
-  },
-  '677d1ecb16c428775054f9de313': {
+  '2339414f-361e-456a-86b3-527b2228c662': {
+    id: '2339414f-361e-456a-86b3-527b2228c662',
     name: 'ACME Corp 75',
-    id: '677d1ecb16c428775054f9de313',
     surveysList: [
       {
         surveyNr: 1,
@@ -8423,10 +8368,5 @@ export default {
         closingRatePerSurvey: 0,
       },
     ],
-  },
-  '680f5e6eabd43d0840b17643512': {
-    name: 'ACME Corp 76',
-    id: '680f5e6eabd43d0840b17643512',
-    surveysList: [],
   },
 }

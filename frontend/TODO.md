@@ -21,8 +21,6 @@
 - [x] tail cut 5 last survey in progress chart
 - [x] update kpi stddev to t shape
 - [x] be able to print to PDF or similar to allow to forward the view of a clients' data to them https://majidzeno.hashnode.dev/effortless-pdf-generation-in-vue
-- [ ] be able to select a different view with the development over time (half-year intervals) -> see draft
-- [ ] https://joineer.slack.com/archives/C01CV1D3464/p1743603999532109
 - [x] fix getUser after login to have correct initial chart load
 - [x] fix overlap header with stddev button
 - [x] remove buttons from print

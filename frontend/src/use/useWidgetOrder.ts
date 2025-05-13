@@ -8,6 +8,12 @@ export const useWidgetOrder = (dataList: Ref<any[]>, storageKey: string) => {
 
   watch(dataList, () => {
     /* if a sorting order is available pick items from the original sorted list and assign it to widgetsList */
+
+    if (dataList.value.length && widgetSortOrder.value.some(item => item === null)) {
+      widgetsList.value = dataList.value
+      return
+    }
+
     widgetsList.value = widgetSortOrder.value?.length
       ? widgetSortOrder.value.reduce((acc, cur, index) => {
           acc[index] = dataList.value.find(item => item.id === cur)

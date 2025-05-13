@@ -126,9 +126,9 @@ const onPrintClick = () => {
       flat
     >
       <img
-        class="min-w-16 w-32 mr-4 px-2 sm:px-16 md:px-0"
-        src="/images/joineer.png"
-        alt="joineer-log"
+        class="min-w-16 w-16 mr-4 px-2 sm:px-16 md:px-0"
+        src="/images/customer-success-logo.png"
+        alt="customer-success-logo"
         style="filter: drop-shadow(2px 2px 4px rgba(255, 255, 255, 0.7))"
       />
 

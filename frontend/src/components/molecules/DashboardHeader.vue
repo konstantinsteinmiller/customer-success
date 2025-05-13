@@ -35,9 +35,9 @@ const timeFrame = computed(() => {
   const oneYearAgoDateISO = oneYearAgo.toISOString().split('T')[0]
 
   // const currentDate = new Date()
-  const month = currentDate.toLocaleString('default', { month: 'long' })
+  const month = currentDate.toLocaleString('en', { month: 'long' })
   const year = currentDate.getFullYear()
-  const oneYearAgoMonth = oneYearAgo.toLocaleString('default', { month: 'long' })
+  const oneYearAgoMonth = oneYearAgo.toLocaleString('en', { month: 'long', lang: 'en-US' })
   const oneYearAgoYear = oneYearAgo.getFullYear()
   return `${oneYearAgoMonth} ${oneYearAgoYear} - ${month} ${year}`
 })

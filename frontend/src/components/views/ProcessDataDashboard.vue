@@ -16,7 +16,6 @@ import { useUser } from '@/use/useUser'
 import draggable from 'vuedraggable'
 import { useWidgetOrder } from '@/use/useWidgetOrder'
 import DashboardHeader from '@/components/molecules/DashboardHeader.vue'
-import MultivalueLineChart from '@/components/organism/MultivalueLineChart.vue'
 import Widget from '@/components/organism/Widget.vue'
 
 const props = defineProps({
@@ -30,7 +29,6 @@ const props = defineProps({
   },
 })
 
-const { t } = useI18n()
 const { selectedCompaniesRef, selectedCompany, totalCompanies } = useUser()
 
 const savedShowSdtDev = localStorage.getItem('showStdDev')
