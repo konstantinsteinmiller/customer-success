@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { computed, ComputedRef, onMounted, Ref, ref } from 'vue'
-import { getKpiAvgPerSurvey, calculateKpiStandardDeviationsPerSurvey } from '@/utils/transformData'
+import {
+  getKpiAvgPerSurvey,
+  calculateKpiStandardDeviationsPerSurvey,
+  transformSurveyData,
+  calculateKpiStandardDeviations,
+} from '@/utils/transformData'
 import { pick } from 'lodash'
 import { PROGRESS_KPI_SORTING_ORDER } from '@/config/constants'
 import { KPIData, RelevantSurveyMetrics, SurveyKPI } from '@/types/SurveyMetrics'
@@ -29,11 +34,51 @@ const { selectedCompaniesRef, selectedCompany } = useUser()
 const savedShowSdtDev = localStorage.getItem('showStdDev')
 const showStdDev: Ref<boolean> = ref(savedShowSdtDev !== null ? JSON.parse(savedShowSdtDev) : false)
 
-const selectedCompanySurveysList = computed(() => {
-  if (selectedCompany?.value.id === 'loading') return []
+const currentDate = new Date()
+const oneYearAgo = new Date()
+oneYearAgo.setFullYear(currentDate.getFullYear() - 1)
 
-  const surveyList = props.data?.[selectedCompany.value.id]?.surveysList
-  return calculateAvgKPIs(surveyList || [])
+const timeDifference = currentDate.getTime() - oneYearAgo.getTime()
+const halfTimeDifference = timeDifference / 2
+
+const firstHalfStartDate = new Date(oneYearAgo.getTime())
+const firstHalfEndDate = new Date(oneYearAgo.getTime() + halfTimeDifference)
+const secondHalfStartDate = new Date(oneYearAgo.getTime() + halfTimeDifference + 1) // Add 1 millisecond to avoid overlap
+const secondHalfEndDate = new Date(currentDate.getTime())
+const firstHalfDateString = `${firstHalfStartDate.toISOString().split('T')[0]} - ${firstHalfEndDate.toISOString().split('T')[0]}`
+const secondHalfDateString = `${secondHalfStartDate.toISOString().split('T')[0]} - ${secondHalfEndDate.toISOString().split('T')[0]}`
+
+const getHalfYearAggregatedSurveyLists = (surveyList: any[]) => {
+  const filteredToFirstHalfSurveysList = surveyList.filter((survey: KPIData) => {
+    const surveyEndDate = new Date(survey.endDate)
+    return surveyEndDate >= firstHalfStartDate && surveyEndDate <= firstHalfEndDate
+  })
+
+  const filteredToSecondHalfSurveysList = surveyList.filter((survey: KPIData) => {
+    const surveyEndDate = new Date(survey.endDate)
+    return surveyEndDate >= secondHalfStartDate && surveyEndDate <= secondHalfEndDate
+  })
+
+  return [calculateAvgKPIs(filteredToFirstHalfSurveysList), calculateAvgKPIs(filteredToSecondHalfSurveysList)]
+}
+
+const getTransformedHalfYearKpis = (surveyList: any[]) => {
+  let [firstHalfSurveysList, secondHalfSurveysList] = getHalfYearAggregatedSurveyLists(surveyList)
+  if (firstHalfSurveysList?.length) {
+    firstHalfSurveysList = transformSurveyData(firstHalfSurveysList)
+  }
+  if (secondHalfSurveysList?.length) {
+    secondHalfSurveysList = transformSurveyData(secondHalfSurveysList)
+  }
+  return [firstHalfSurveysList, secondHalfSurveysList]
+}
+
+const selectedCompanySurveysList = computed(() => {
+  if (selectedCompany?.value.id === 'loading' || !selectedCompany?.value?.id) return []
+
+  const surveyList = props.data?.[selectedCompany.value.id]?.surveysList || []
+  const [firstHalfKpis, secondHalfKpis] = getTransformedHalfYearKpis(surveyList)
+  return [firstHalfKpis, secondHalfKpis]
 })
 
 const relevantCompaniesWithSurveysList = computed(() => {
@@ -81,16 +126,8 @@ const calculateAvgKPIs = (surveysList: any[]): KPIData => {
 
 const pickedKpisPerSurveyOfRelevantCompaniesList: ComputedRef<RelevantSurveyMetrics[]> = computed(() =>
   relevantCompaniesWithSurveysList.value.map((company: any) => {
-    const filteredToLastYearSurveysList = company.surveysList.filter((survey: KPIData) => {
-      const surveyEndDate = new Date(survey.endDate)
-      const currentDate = new Date()
-      const oneYearAgo = new Date()
-      oneYearAgo.setFullYear(currentDate.getFullYear() - 1)
-      return surveyEndDate >= oneYearAgo && surveyEndDate <= currentDate
-    })
-
-    const pickedKpisList = calculateAvgKPIs(filteredToLastYearSurveysList)
-    return pickedKpisList
+    const [firstHalfKpis, secondHalfKpis] = getTransformedHalfYearKpis(company.surveysList)
+    return [firstHalfKpis, secondHalfKpis]
   })
 )
 
@@ -106,9 +143,23 @@ const filteredProcessDataList = computed(() => {
   if (!selectedCompanySurveysList.value.length) return []
 
   const withStdDevPerSurveyList = calculateKpiStandardDeviationsPerSurvey(
-    relevantCompaniesWithSurveysList.value.map(company =>
-      JSON.parse(JSON.stringify(calculateAvgKPIs(company.surveysList)))
-    )
+    relevantCompaniesWithSurveysList.value.map(company => {
+      const [firstHalfKpis, secondHalfKpis] = getTransformedHalfYearKpis(company.surveysList)
+      /* make some sanity checks. If there are no surveys in first of seconds half of the year
+       * for a company, then just duplicate available aggregated Kpis for the half year that
+       * is available, otherwise just return empty array. That basically falsifies the data
+       * but I don't see a more sane way to handle this right now */
+      if (firstHalfKpis instanceof Array && !(secondHalfKpis instanceof Array)) {
+        return [secondHalfKpis, secondHalfKpis]
+      }
+      if (secondHalfKpis instanceof Array && !(firstHalfKpis instanceof Array)) {
+        return [firstHalfKpis, firstHalfKpis]
+      }
+      if (firstHalfKpis instanceof Array && secondHalfKpis instanceof Array) {
+        return []
+      }
+      return [firstHalfKpis, secondHalfKpis]
+    })
   )
 
   const referenceKpisPerSurveyList: RelevantSurveyMetrics = getKpiAvgPerSurvey(
@@ -118,7 +169,6 @@ const filteredProcessDataList = computed(() => {
   const sortedSurveyData = []
   ;[...Array(maxSurveys.value)].forEach((_, surveyIndex) => {
     const survey = referenceKpisPerSurveyList[surveyIndex]
-    // console.log('survey: ', survey, ' - survey no. ', surveyIndex)
 
     Object.keys(survey).forEach((key: SurveyKPI) => {
       const index = PROGRESS_KPI_SORTING_ORDER.findIndex((kpi: SurveyKPI) => kpi === key)
@@ -143,7 +193,7 @@ const filteredProcessDataList = computed(() => {
 })
 
 const labelsList = computed(() => {
-  return [...Array(maxSurveys.value)].map((_, index) => `Survey ${index + 1}`).slice(0, showableSurveys.value) || []
+  return [firstHalfDateString, secondHalfDateString]
 })
 
 const isMounted: Ref<boolean> = ref(false)
